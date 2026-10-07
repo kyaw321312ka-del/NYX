@@ -57,18 +57,46 @@ function ClassEquipmentPopup({ data }) {
     }
   }
 
+  async function edit_equipment(e) {
+    e.preventDefault();
+    if (!venue_id || !info?.id) return;
+    const equipment = {
+      venue_id,
+      product_name: nameref.current.value,
+      rental_price: priceref.current.value,
+      qty_total: qtyref.current.value,
+    };
+    openloading();
+    try {
+      const editUrl = import.meta.env.VITE_CLASS_EDIT_EQUIPMENT.replace(
+        ":equipmentId",
+        encodeURIComponent(info.id),
+      );
+      const response = await fetch(editUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(equipment),
+      });
+      if (response.ok) {
+        await GetCourts(venue_id);
+        opensuccess("Equipment Updated", "Equipment details were updated");
+        setshowequipment(false);
+      } else {
+        openerror("Something went wrong");
+      }
+    } catch (err) {
+      openerror("Cannot connect with server");
+      console.log(err);
+    }
+  }
+
   return (
     <div className={`cepwarper ${isDark ? "dark-mode" : ""}`}>
       <form
         className="cepmain"
-        onSubmit={
-          info
-            ? (e) => {
-                e.preventDefault();
-                alert("Waiting api from backend");
-              }
-            : add_equipment
-        }
+        onSubmit={info ? edit_equipment : add_equipment}
       >
         <button
           className="cepbody1"
@@ -118,7 +146,7 @@ function ClassEquipmentPopup({ data }) {
             <button type="button" onClick={() => setallow(!allow)}>
               Edit
             </button>
-            <button disabled={info && allow}>Update</button>
+            <button type="submit" disabled={allow}>Update</button>
           </span>
         ) : (
           <span className="cepbody5">
