@@ -7,6 +7,8 @@ import AddIcon from "@mui/icons-material/Add";
 import "../classCss/courseaddclass.css";
 import { useLocation, useNavigate } from "react-router-dom";
 
+const API_BASE = "http://130.94.99.9:5000";
+
 const AddClassForm = () => {
   const [selectedDays, setSelectedDays] = useState("");
   const [classImage, setClassImage] = useState(null);
@@ -206,7 +208,7 @@ const AddClassForm = () => {
     }
 
     try {
-      const res = await fetch(`${BASE_URL}/api/course/trainingprogram`, {
+      const res = await fetch(`${API_BASE}/api/course/trainingprogram`, {
         method: "POST",
         body: formData,
       });
@@ -215,7 +217,7 @@ const AddClassForm = () => {
       let responseData;
       try {
         responseData = JSON.parse(responseText);
-      } catch (e) {
+      } catch {
         responseData = { success: false, message: responseText };
       }
 
@@ -264,7 +266,7 @@ const AddClassForm = () => {
         });
         setIsSubmitting(false);
       }
-    } catch (err) {
+    } catch {
       Swal.fire({
         icon: "error",
         title: "Network Error!",
