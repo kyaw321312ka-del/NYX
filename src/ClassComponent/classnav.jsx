@@ -132,7 +132,7 @@ function ClassNav() {
                     order
                   </NavLink>
                   <NavLink className="dropdownlist" to="classmenu">
-                    MENUSfgfds
+                    MENUS
                   </NavLink>
                 </span>
               )}

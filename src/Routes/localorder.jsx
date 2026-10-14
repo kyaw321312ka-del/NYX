@@ -110,6 +110,26 @@ function LocalOrder() {
 
   return (
     <div style={{ padding: "0px", marginTop: "20px" }}>
+      {/* Print ချိန်တွင် အဖြူကြီးဖြစ်နေခြင်းကို ဖြေရှင်းရန် CSS Style */}
+      <style>{`
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          .receipt-modal-container, .receipt-modal-container * {
+            visibility: visible;
+          }
+          .receipt-modal-container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            background: white !important;
+            color: black !important;
+          }
+        }
+      `}</style>
+
       {ReceipetJsx}
 
       {/* 📦 Table Container Card */}
@@ -313,11 +333,15 @@ function LocalOrder() {
                                   display: "inline-block",
                                   margin: 0,
                                   padding: "4px 12px",
-                                  backgroundColor: "#3B82F6",
-                                  color: "white",
+                                  // Dark/Light mode အလိုက် View Button အရောင်ပြောင်းလဲစေရန် (Light mode တွင် အပြာနု/နောက်ခံဖြူ၊ Dark mode တွင် အမဲနောက်ခံ/စာသားအဖြူ သို့မဟုတ် ထင်ရှားသောအရောင်)
+                                  backgroundColor: isDarkMode
+                                    ? "#F8FAFC"
+                                    : "#0F172A",
+                                  color: isDarkMode ? "#0F172A" : "#FFFFFF",
                                   borderRadius: "8px",
                                   cursor: "pointer",
                                   fontSize: "13px",
+                                  fontWeight: "600",
                                 }}
                                 onClick={() => show_order(item)}
                               >
@@ -380,4 +404,5 @@ function LocalOrder() {
     </div>
   );
 }
+
 export default LocalOrder;
