@@ -23,12 +23,14 @@ export const useReceipt = () => {
   const print = useReactToPrint({
     contentRef: imgref,
     documentTitle: `Receipt_${info?.order_no}` || `reciept${Date.now()}`,
+    // Print ထုတ်တဲ့အခါ style တွေ ပါလာစေရန်
+    bodyClass: "print-body",
   });
 
   const download = async () => {
     if (imgref.current) {
       const canvas = await html2canvas(imgref.current, {
-        backgroundColor: "#1a222c",
+        backgroundColor: "#ffffff",
         scale: 2,
       });
 
@@ -113,7 +115,7 @@ export const useReceipt = () => {
               </div>
             </div>
             <div className="rc6">
-              <button onClick={() => download()} className="downloadbtn">
+              <button onClick={() => download()}>
                 <SaveIcon />
               </button>
               <button onClick={() => print()}>Print</button>
