@@ -4,15 +4,15 @@ import RemoveIcon from "@mui/icons-material/RemoveShoppingCartRounded";
 import RentalIcon from "@mui/icons-material/Inventory2Outlined";
 import StadiumIcon from "@mui/icons-material/StadiumOutlined";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
+import CloseIcon from "@mui/icons-material/Close";
+import PrintIcon from "@mui/icons-material/Print";
 import { useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useNavigate } from "react-router-dom";
 import { useGetOrder, useGetPayment } from "../Api_Call";
 import { useGetClassVenue } from "../ClassApi";
 import { useNoti } from "../Hooks/alert";
 import { Context } from "../Hooks/context";
 import ClassEquipmentOrder from "./classequipmentorder";
-import { useClassReceipt } from "./ClassReceipt";
 import "./classcreatenewbooking.css";
 
 function ClassCreateBooking({ data }) {
@@ -29,17 +29,21 @@ function ClassCreateBooking({ data }) {
   const [file, setfile] = useState(null);
   const [filetosend, setfiletosend] = useState(null);
 
-  const [payment, setpayment] = useState("Cash");
+  const [payment, setpayment] = useState(""); // ပထမအစမှာ ဘာမှမရွေးထားစေရန် အလွတ်ထားပါ
   const [name, setname] = useState("-------");
   const [number, setnumber] = useState("-------");
+  const [formError, setFormError] = useState(""); // မြင်သာသော Error Message ပြရန် state
+
+  // Success Modal State
+  const [showReceiptModal, setShowReceiptModal] = useState(false);
+  const [receiptData, setReceiptData] = useState(null);
 
   const imgref = useRef();
   const paymentref = useRef();
   const { Payment, GetPayment, Tax, GetTax } = useGetPayment();
   const { GetVenue, Courts } = useGetClassVenue();
-  const { Loading, openerror, openloading, opensuccess, close } = useNoti();
+  const { Loading, openerror, openloading, close } = useNoti();
   const { GetLocalOrders } = useGetOrder();
-  const { open, ClassReceipetJsx } = useClassReceipt();
 
   const {
     venue_name,
@@ -109,18 +113,6 @@ function ClassCreateBooking({ data }) {
     });
   }
 
-  function show_receipet() {
-    open({
-      order_no: reciept,
-      payment: paymentref.current.value,
-      Date: new Date().toLocaleDateString(),
-      Time: new Date().toLocaleTimeString(),
-      court_fee: info?.hourly_price,
-      rental_fee: amount,
-      total_amount: total,
-    });
-  }
-
   function remove_item(id) {
     let result = childdata.filter((item) => item.id !== id);
     setchilddata(result);
@@ -132,10 +124,34 @@ function ClassCreateBooking({ data }) {
     if (selected_file) {
       const url = URL.createObjectURL(selected_file);
       setfile(url);
+      setFormError(""); // ပုံထည့်လိုက်တာနဲ့ error ပျောက်သွားမည်
     }
   };
 
+  // Create Booking ခလုတ် နှိပ်ခွင့်ရှိမရှိ စစ်ဆေးသည့် Logic
+  const isFormValid =
+    targettime !== null &&
+    payment !== "" &&
+    (payment === "Cash" || filetosend !== null);
+
   async function add_order() {
+    if (!targettimeid || !targettime) {
+      setFormError("Please select an available time slot");
+      return;
+    }
+
+    if (!payment) {
+      setFormError("Please select a payment method");
+      return;
+    }
+
+    if (payment !== "Cash" && !filetosend) {
+      setFormError(`Please upload payment receipt image for ${payment}`);
+      return;
+    }
+
+    setFormError("");
+
     let delta = childdata.map((item) => {
       let qty = cart[item.id] !== undefined ? cart[item.id] : 1;
       return { equipment_id: item.id, quantity: qty };
@@ -146,9 +162,7 @@ function ClassCreateBooking({ data }) {
     if (filetosend) {
       formData.append("payment_image", filetosend);
     }
-    if (payment !== "Cash") {
-      formData.append("payment_method", payment);
-    }
+    formData.append("payment_method", payment);
     formData.append("venue_id", venue_id);
     formData.append("court_id", info?.id);
 
@@ -167,32 +181,182 @@ function ClassCreateBooking({ data }) {
         body: formData,
       });
       if (response.ok) {
+        close();
         await GetLocalOrders();
-        opensuccess("Action Successful", "Booking added successfully");
         GetRemainBooking(info?.id, date);
+
+        setReceiptData({
+          order_no: reciept,
+          payment: payment,
+          date: date || new Date().toLocaleDateString(),
+          time: targettime || new Date().toLocaleTimeString(),
+          venue: venue_name,
+          court: info?.court_name,
+          court_fee: info?.hourly_price || 0,
+          rental_fee: amount,
+          total_amount: total,
+          items: childdata.map((item) => ({
+            name: item.product_name,
+            qty: cart[item.id] || 1,
+            price: item.rental_price * (cart[item.id] || 1),
+          })),
+        });
+
+        setShowReceiptModal(true);
+
         settargettime(null);
-        show_receipet();
         setchilddata([]);
         setfiletosend(null);
         setfile(null);
         setCart({});
       } else {
+        close();
         openerror("Something went wrong");
       }
     } catch (err) {
+      close();
       openerror("Cannot connect with server");
       console.log(err);
     }
   }
 
   function paymentchange(event) {
-    setpayment(event.target.value);
+    const val = event.target.value;
+    setpayment(val);
+    if (val === "Cash" || filetosend) {
+      setFormError("");
+    } else {
+      setFormError("Please upload payment receipt image for " + val);
+    }
   }
+
+  const handlePrint = () => {
+    if (!receiptData) return;
+
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "absolute";
+    iframe.style.width = "0px";
+    iframe.style.height = "0px";
+    iframe.style.border = "none";
+    document.body.appendChild(iframe);
+
+    const itemsHtml = receiptData.items?.length
+      ? `
+        <div style="border-bottom: 1px dashed #cbd5e1; margin: 10px 0;"></div>
+        <div style="font-weight: 600; color: #64748b; font-size: 11px; margin-bottom: 6px;">RENTAL ITEMS:</div>
+        ${receiptData.items
+          .map(
+            (item) => `
+          <div style="display: flex; justify-content: space-between; font-size: 12px; color: #334155; margin-bottom: 4px;">
+            <span>${item.name} x${item.qty}</span>
+            <span>${item.price.toLocaleString()} Ks</span>
+          </div>
+        `,
+          )
+          .join("")}
+      `
+      : "";
+
+    const doc = iframe.contentWindow.document;
+    doc.write(`
+      <html>
+        <head>
+          <title>Receipt_${receiptData.order_no}</title>
+          <style>
+            @page { size: auto; margin: 15mm; }
+            body { 
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+              margin: 0; 
+              padding: 0; 
+              color: #1e293b; 
+              background: #fff;
+              display: flex;
+              justify-content: center;
+            }
+            .receipt-card {
+              width: 320px;
+              padding: 20px;
+              border: 1px solid #e2e8f0;
+              border-radius: 12px;
+              box-sizing: border-box;
+            }
+            .title {
+              text-align: center;
+              font-size: 18px;
+              font-weight: 700;
+              margin: 0 0 4px 0;
+              color: #0f172a;
+            }
+            .subtitle {
+              text-align: center;
+              font-size: 12px;
+              color: #64748b;
+              margin: 0 0 16px 0;
+            }
+            .divider {
+              border-bottom: 1px dashed #cbd5e1;
+              margin: 12px 0;
+            }
+            .row {
+              display: flex;
+              justify-content: space-between;
+              font-size: 12px;
+              margin-bottom: 8px;
+            }
+            .label { color: #64748b; font-weight: 500; }
+            .val { font-weight: 600; color: #0f172a; }
+            .highlight { color: #2563eb; }
+            .total-row {
+              display: flex;
+              justify-content: space-between;
+              font-size: 14px;
+              font-weight: 700;
+              padding-top: 8px;
+              border-top: 1px solid #e2e8f0;
+              margin-top: 8px;
+            }
+            .total-val { color: #16a34a; }
+          </style>
+        </head>
+        <body>
+          <div class="receipt-card">
+            <div class="title">Booking Successfully!</div>
+            <div class="subtitle">Thank you for booking with us</div>
+            <div class="divider"></div>
+            
+            <div class="row"><span class="label">RECEIPT NO</span><span class="val">#${receiptData.order_no}</span></div>
+            <div class="row"><span class="label">VENUE</span><span class="val">${receiptData.venue}</span></div>
+            <div class="row"><span class="label">COURT</span><span class="val highlight">${receiptData.court}</span></div>
+            <div class="row"><span class="label">DATE</span><span class="val">${receiptData.date}</span></div>
+            <div class="row"><span class="label">TIME SLOT</span><span class="val">${receiptData.time}</span></div>
+            <div class="row"><span class="label">PAYMENT</span><span class="val" style="text-transform: uppercase;">${receiptData.payment}</span></div>
+            
+            ${itemsHtml}
+            
+            <div class="divider"></div>
+            <div class="row"><span class="label">COURT FEE</span><span class="val">${Number(receiptData.court_fee).toLocaleString()} Ks</span></div>
+            <div class="row"><span class="label">RENTAL FEE</span><span class="val">${Number(receiptData.rental_fee).toLocaleString()} Ks</span></div>
+            
+            <div class="total-row">
+              <span>TOTAL AMOUNT</span>
+              <span class="total-val">${Number(receiptData.total_amount).toLocaleString()} Ks</span>
+            </div>
+          </div>
+        </body>
+      </html>
+    `);
+    doc.close();
+
+    setTimeout(() => {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+      document.body.removeChild(iframe);
+    }, 500);
+  };
 
   return createPortal(
     <div className={`createordermain ${isDark ? "dark-mode" : ""}`}>
       {Loading}
-      {ClassReceipetJsx}
 
       {/* Top Navbar Header */}
       <div className="createordernav">
@@ -203,15 +367,13 @@ function ClassCreateBooking({ data }) {
       </div>
 
       <div className="addclassorderbody">
-        {/* Left Column (Details, Time Slots, Rental Table) */}
+        {/* Left Column */}
         <div className="addclassorderbody1">
-          {/* Receipt Info Box */}
           <div className="createorderreciept">
             <p className="reciept-label">Receipt Number</p>
             <span className="reciept-value">{reciept}</span>
           </div>
 
-          {/* Court & Time Slot Selection */}
           <div className="createorderselect">
             <h3 className="aos1">
               <StadiumIcon className="section-icon" />
@@ -247,6 +409,7 @@ function ClassCreateBooking({ data }) {
                         onClick={() => {
                           settargettimeid(item.id);
                           settargettime(slotText);
+                          setFormError("");
                         }}
                       >
                         {slotText}
@@ -262,7 +425,6 @@ function ClassCreateBooking({ data }) {
             </div>
           </div>
 
-          {/* Rental Equipment Section */}
           <div className="addclassorderchoice">
             <div className="createorderchoiceheader">
               <p className="createorderchoiceheader1">
@@ -317,9 +479,8 @@ function ClassCreateBooking({ data }) {
           </div>
         </div>
 
-        {/* Right Column (Total & Payment Details) */}
+        {/* Right Column */}
         <div className="addclassorderbody2">
-          {/* Total Breakdown */}
           <div className="orderamount">
             <h3>PAYMENT SUMMARY</h3>
             <span>
@@ -334,7 +495,6 @@ function ClassCreateBooking({ data }) {
             <h2>Total: {total} Ks</h2>
           </div>
 
-          {/* Payment Method & Receipt Upload */}
           <div className="orderprint">
             <div className="orderprint1">
               <p className="orderprintheader">
@@ -343,12 +503,13 @@ function ClassCreateBooking({ data }) {
               </p>
 
               <div className="ssx">
-                <label>Payment Method</label>
+                <label>Payment Method *</label>
                 <select
                   ref={paymentref}
                   value={payment}
                   onChange={paymentchange}
                 >
+                  <option value="">Select Payment Method</option>
                   <option value="Cash">Cash</option>
                   {Array.isArray(Payment.result) &&
                     Payment.result.map((item, index) => (
@@ -359,7 +520,7 @@ function ClassCreateBooking({ data }) {
                 </select>
               </div>
 
-              {payment !== "Cash" && (
+              {payment && payment !== "Cash" && (
                 <div className="paymentmain">
                   <label>Account Details</label>
                   <div className="paymentwarper">
@@ -376,8 +537,10 @@ function ClassCreateBooking({ data }) {
               )}
 
               <div
-                className={`createorderreceipet ${payment === "Cash" ? "disabled" : ""}`}
-                onClick={() => payment !== "Cash" && imgref.current.click()}
+                className={`createorderreceipet ${!payment || payment === "Cash" ? "disabled" : ""}`}
+                onClick={() =>
+                  payment && payment !== "Cash" && imgref.current.click()
+                }
               >
                 {file ? (
                   <img src={file} alt="payment receipt" className="receipet" />
@@ -385,7 +548,9 @@ function ClassCreateBooking({ data }) {
                   <>
                     <UploadFileIcon className="upload-icon" />
                     <p>
-                      Click to Upload <br /> Receipt Image
+                      {payment && payment !== "Cash"
+                        ? "Click to Upload Receipt Image *"
+                        : "Select payment method first"}
                     </p>
                   </>
                 )}
@@ -394,12 +559,31 @@ function ClassCreateBooking({ data }) {
                   style={{ display: "none" }}
                   ref={imgref}
                   onChange={handleFileChange}
-                  disabled={payment === "Cash"}
+                  disabled={!payment || payment === "Cash"}
                 />
               </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* မြင်သာသော Error Message ပြရန် */}
+            {formError && (
+              <div
+                style={{
+                  color: "#ef4444",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  backgroundColor: isDark
+                    ? "rgba(239, 68, 68, 0.15)"
+                    : "#fee2e2",
+                  padding: "8px 12px",
+                  borderRadius: "6px",
+                  border: "1px solid #fecaca",
+                  textAlign: "center",
+                }}
+              >
+                ⚠️ {formError}
+              </div>
+            )}
+
             <div className="createorderbtn">
               <button
                 className="cancel-btn"
@@ -410,8 +594,7 @@ function ClassCreateBooking({ data }) {
               <button
                 className="confirm-btn"
                 onClick={add_order}
-                disabled={targettime == null}
-                style={{ padding: "12px 60px" }}
+                disabled={!isFormValid}
               >
                 Create Booking
               </button>
@@ -429,6 +612,114 @@ function ClassCreateBooking({ data }) {
             equipment: Courts.data?.[0]?.equipment,
           }}
         />
+      )}
+
+      {/* Booking Successfully Modal */}
+      {showReceiptModal && receiptData && (
+        <div className="success-modal-backdrop">
+          <div className="success-modal-box">
+            <button
+              onClick={() => {
+                setShowReceiptModal(false);
+                setshowCreate(false);
+              }}
+              className="success-modal-close"
+            >
+              <CloseIcon fontSize="small" />
+            </button>
+
+            <div className="success-modal-header">
+              <h2>Booking Successfully!</h2>
+              <p>Thank you for booking with us</p>
+            </div>
+
+            <div className="success-modal-divider"></div>
+
+            {/* Content Section */}
+            <div className="success-modal-body">
+              <div className="receipt-row">
+                <span className="receipt-key">RECEIPT NO</span>
+                <span className="receipt-val">#{receiptData.order_no}</span>
+              </div>
+              <div className="receipt-row">
+                <span className="receipt-key">VENUE</span>
+                <span className="receipt-val">{receiptData.venue}</span>
+              </div>
+              <div className="receipt-row">
+                <span className="receipt-key">COURT</span>
+                <span className="receipt-val court-highlight">
+                  {receiptData.court}
+                </span>
+              </div>
+              <div className="receipt-row">
+                <span className="receipt-key">DATE</span>
+                <span className="receipt-val">{receiptData.date}</span>
+              </div>
+              <div className="receipt-row">
+                <span className="receipt-key">TIME SLOT</span>
+                <span className="receipt-val">{receiptData.time}</span>
+              </div>
+              <div className="receipt-row">
+                <span className="receipt-key">PAYMENT</span>
+                <span className="receipt-val payment-method-text">
+                  {receiptData.payment}
+                </span>
+              </div>
+
+              {receiptData.items?.length > 0 && (
+                <>
+                  <div className="success-modal-divider-dashed"></div>
+                  <span className="rental-items-title">RENTAL ITEMS:</span>
+                  {receiptData.items.map((item, idx) => (
+                    <div key={idx} className="receipt-sub-row">
+                      <span>
+                        {item.name} x {item.qty}
+                      </span>
+                      <span>{item.price.toLocaleString()} Ks</span>
+                    </div>
+                  ))}
+                </>
+              )}
+
+              <div className="success-modal-divider-dashed"></div>
+
+              <div className="receipt-row">
+                <span className="receipt-key">COURT FEE</span>
+                <span className="receipt-val">
+                  {Number(receiptData.court_fee).toLocaleString()} Ks
+                </span>
+              </div>
+              <div className="receipt-row">
+                <span className="receipt-key">RENTAL FEE</span>
+                <span className="receipt-val">
+                  {Number(receiptData.rental_fee).toLocaleString()} Ks
+                </span>
+              </div>
+
+              <div className="receipt-total-row">
+                <span className="receipt-total-key">TOTAL AMOUNT</span>
+                <span className="receipt-total-val">
+                  {Number(receiptData.total_amount).toLocaleString()} Ks
+                </span>
+              </div>
+            </div>
+
+            <div className="success-modal-footer">
+              <button onClick={handlePrint} className="modal-print-btn">
+                <PrintIcon fontSize="small" /> Print
+              </button>
+              <button
+                onClick={() => {
+                  setShowReceiptModal(false);
+                  setshowCreate(false);
+                }}
+                className="modal-close-btn"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>,
     document.body,

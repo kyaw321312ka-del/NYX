@@ -90,7 +90,7 @@ function ClassMobileBooking() {
   }
 
   async function ExportTable() {
-    alert("Please Read the documentation(document.txt) or comment");
+    //  alert("Please Read the documentation(document.txt) or comment");
     if (!filtered) return;
     return;
   }

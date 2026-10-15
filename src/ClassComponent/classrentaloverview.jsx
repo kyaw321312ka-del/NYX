@@ -112,8 +112,6 @@ const formatDateToDMY = (dateStr) => {
 };
 
 export default function ClassRentalOverview() {
-  // const isDark = true
-  // Parent (ClassOverview/Outlet) ထဲမှ isDark State ကို ယူသုံးခြင်း
   const outletContext = useOutletContext();
   const isDark = outletContext?.isDark ?? false;
 
@@ -135,6 +133,7 @@ export default function ClassRentalOverview() {
 
   const [loading, setLoading] = useState(true);
   const [previewImage, setPreviewImage] = useState(null);
+  const [selectedPaymentImage, setSelectedPaymentImage] = useState(null); // Payment Image သီးသန့် State
 
   const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -303,7 +302,7 @@ export default function ClassRentalOverview() {
 
   const exportToExcel = () => {
     if (filteredRows.length === 0) {
-      alert("Export ထုတ်ရန် ဒေတာ မရှိသေးပါ!");
+      //alert("Export ထုတ်ရန် ဒေတာ မရှိသေးပါ!");
       return;
     }
     const ws = XLSX.utils.json_to_sheet(
@@ -852,7 +851,9 @@ export default function ClassRentalOverview() {
                         <img
                           src={item.paymentImage}
                           alt="Proof"
-                          onClick={() => setPreviewImage(item)}
+                          onClick={() =>
+                            setSelectedPaymentImage(item.paymentImage)
+                          } // ပုံကိုနှိပ်ရင် payment image သီးသန့်ပေါ်စေရန်
                           style={{
                             width: "40px",
                             height: "40px",
@@ -874,7 +875,7 @@ export default function ClassRentalOverview() {
                     </td>
                     <td style={{ padding: "14px 12px" }}>
                       <button
-                        onClick={() => setPreviewImage(item)}
+                        onClick={() => setPreviewImage(item)} // View ခလုတ်နှိပ်မှသာ Booking Card ပေါ်စေရန်
                         style={{
                           border: "1.5px solid #16a34a",
                           background: "transparent",
@@ -986,7 +987,54 @@ export default function ClassRentalOverview() {
         </div>
       </div>
 
-      {/* Modern Proof Receipt Modal Popup */}
+      {/* Payment Image Preview Dialog (Canteen Overview Style) */}
+      <Dialog
+        open={Boolean(selectedPaymentImage)}
+        onClose={() => setSelectedPaymentImage(null)}
+        maxWidth="sm"
+        PaperProps={{
+          style: {
+            backgroundColor: cardBg,
+            color: textColor,
+            borderRadius: "12px",
+            padding: "16px",
+          },
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginBottom: "8px",
+          }}
+        >
+          <button
+            onClick={() => setSelectedPaymentImage(null)}
+            style={{
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              color: subTextColor,
+            }}
+          >
+            <CloseIcon fontSize="small" />
+          </button>
+        </div>
+        <div style={{ textAlign: "center" }}>
+          <img
+            src={selectedPaymentImage}
+            alt="Payment Proof Preview"
+            style={{
+              maxWidth: "100%",
+              maxHeight: "70vh",
+              borderRadius: "8px",
+              objectFit: "contain",
+            }}
+          />
+        </div>
+      </Dialog>
+
+      {/* Modern Proof Receipt Modal Popup (Triggered by View button) */}
       <Dialog
         open={Boolean(previewImage)}
         onClose={() => setPreviewImage(null)}

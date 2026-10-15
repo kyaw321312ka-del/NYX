@@ -234,7 +234,10 @@ function Classwalkin() {
         }));
         setModalType(null);
         close();
-        opensuccess("Walk-in Updated", "The walk-in setup was updated successfully");
+        opensuccess(
+          "Walk-in Updated",
+          "The walk-in setup was updated successfully",
+        );
       } catch (error) {
         close();
         openerror(error.message);
@@ -285,7 +288,10 @@ function Classwalkin() {
       }));
       setModalType(null);
       close();
-      opensuccess("Walk-in Created", "The walk-in setup was created successfully");
+      opensuccess(
+        "Walk-in Created",
+        "The walk-in setup was created successfully",
+      );
     } catch (error) {
       close();
       openerror(error.message);
@@ -465,9 +471,9 @@ function Classwalkin() {
             const config = walkInConfigs[court.id];
             const hasWalkInSetup = Boolean(
               config?.price &&
-                config?.players &&
-                config?.openTime &&
-                config?.closeTime,
+              config?.players &&
+              config?.openTime &&
+              config?.closeTime,
             );
             const isFull =
               hasWalkInSetup &&
@@ -485,7 +491,8 @@ function Classwalkin() {
                     <Switch disabled checked={false} size="small" />
                   </div>
                   <div className="card-img-container">
-                    {Array.isArray(court.gallery) && court.gallery.length > 0 ? (
+                    {Array.isArray(court.gallery) &&
+                    court.gallery.length > 0 ? (
                       <img
                         src={court.gallery[0].court_image_url}
                         alt="court image"
@@ -498,7 +505,7 @@ function Classwalkin() {
                     className="btn-walkin-create"
                     onClick={() => handleCreate(court)}
                   >
-                   Create
+                    Create
                   </button>
                 </div>
               );
@@ -513,7 +520,8 @@ function Classwalkin() {
               >
                 <div className="card-top">
                   <span className="court-name">
-                    <SportsTennisIcon className="court-icon" />  {court.court_name}
+                    <SportsTennisIcon className="court-icon" />{" "}
+                    {court.court_name}
                   </span>
                   <div className="card-top-controls">
                     <EditOutlinedIcon
@@ -542,7 +550,8 @@ function Classwalkin() {
                   {Array.isArray(config.courtImages) &&
                   config.courtImages.length > 0 ? (
                     <img src={config.courtImages[0]} alt="court image" />
-                  ) : Array.isArray(court.gallery) && court.gallery.length > 0 ? (
+                  ) : Array.isArray(court.gallery) &&
+                    court.gallery.length > 0 ? (
                     <img
                       src={court.gallery[0].court_image_url}
                       alt="court image"
@@ -574,9 +583,8 @@ function Classwalkin() {
                         isFull ? "text-red" : "text-dark"
                       }`}
                     >
-                      Capacity: {config.currentPlayers}/
-                      {config.players || "-"} Players{" "}
-                      {isFull ? "(Full)" : ""}
+                      Capacity: {config.currentPlayers}/{config.players || "-"}{" "}
+                      Players {isFull ? "(Full)" : ""}
                     </span>
                   </div>
                 </div>

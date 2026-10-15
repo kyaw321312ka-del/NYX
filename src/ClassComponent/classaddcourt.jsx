@@ -5,7 +5,7 @@ import { useRef, useState, useContext } from "react";
 import UploadIcon from "@mui/icons-material/CloudUploadOutlined";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useNoti } from "../Hooks/alert";
-import ClassEquipmentPopup from "./classequipmentpopup";
+// import ClassEquipmentPopup from "./classequipmentpopup"; // Commented out as requested
 import { Context } from "../Hooks/context";
 import Swal from "sweetalert2";
 
@@ -263,67 +263,16 @@ function ClassAddCourt() {
     }
   }
 
+  /* 
   async function delete_equipment(id) {
     if (!id) return;
-
-    const result = await Swal.fire({
-      title: "Remove Equipment?",
-      text: "Are you sure to remove this equipment?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#ef4444",
-      cancelButtonColor: "#6c757d",
-      confirmButtonText: "Delete",
-      cancelButtonText: "Cancel",
-      ...getSwalTheme(),
-    });
-
-    if (!result.isConfirmed) return;
-
-    try {
-      let response = await fetch(
-        `${import.meta.env.VITE_CLASS_DELETE_EQUIPMENT}/${id}`,
-        {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-        },
-      );
-
-      if (response.ok) {
-        await GetCourts(venue_id);
-        await Swal.fire({
-          title: "Success",
-          text: "Item Removed from List",
-          icon: "success",
-          confirmButtonText: "Great, Thanks!",
-          confirmButtonColor: "#3b82f6",
-          ...getSwalTheme(),
-        });
-        setshow(false);
-      } else {
-        await Swal.fire({
-          title: "Error",
-          text: "Something went wrong",
-          icon: "error",
-          confirmButtonColor: "#ef4444",
-          ...getSwalTheme(),
-        });
-      }
-    } catch (err) {
-      console.log(err);
-      await Swal.fire({
-        title: "Error",
-        text: "Cannot connect with server",
-        icon: "error",
-        confirmButtonColor: "#ef4444",
-        ...getSwalTheme(),
-      });
-    }
-  }
+    // ... (commented out original delete logic)
+  } 
+  */
 
   return createPortal(
     <div>
-      {show && (
+      {/* {show && (
         <ClassEquipmentPopup
           data={{
             info: null,
@@ -334,7 +283,7 @@ function ClassAddCourt() {
             isDark: isDark,
           }}
         />
-      )}
+      )} */}
       <form
         className={`cacmain ${isDark ? "dark-mode" : ""}`}
         onSubmit={add_court}
@@ -354,47 +303,78 @@ function ClassAddCourt() {
               <h3>RENTAL EQUIPMENT</h3>
               <button
                 type="button"
-                onClick={() => {
-                  setshow(true);
+                disabled
+                style={{
+                  opacity: 0.5,
+                  cursor: "not-allowed",
+                  backgroundColor: isDark ? "#2a2d32" : "#e2e8f0",
+                  color: isDark ? "#9ca3af" : "#64748b",
                 }}
               >
                 + Add item
               </button>
             </div>
-            <div className="caclcontent2">
-              <table>
-                <thead>
-                  <tr>
-                    <th>PRODUCT NAME</th>
-                    <th>RENTAL PRICE</th>
-                    <th>Qty-total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Array.isArray(Courts.data?.[index]?.equipment) ? (
-                    Courts.data?.[index]?.equipment.length > 0 ? (
-                      Courts.data?.[index]?.equipment.map((item, i) => {
-                        return (
-                          <tr key={i}>
-                            <td>{item.product_name}</td>
-                            <td>{item.rental_price} KS/Hr</td>
-                            <td>{item.qty_total}</td>
-                          </tr>
-                        );
-                      })
+
+            {/* Table အစား တောင်းဆိုထားသော စာသားကို ထည့်သွင်းခြင်း */}
+            <div
+              className="caclcontent2"
+              style={{ padding: "20px", textAlign: "center" }}
+            >
+              <p
+                style={{
+                  fontSize: "14px",
+                  color: isDark ? "#9ca3af" : "#64748b",
+                  margin: 0,
+                  fontWeight: 500,
+                  backgroundColor: isDark ? "#1e2023" : "#f8fafc",
+                  padding: "24px",
+                  borderRadius: "8px",
+                  border: `1px dashed ${isDark ? "#3a3d40" : "#cbd5e1"}`,
+                }}
+              >
+                Rental equipment items cannot be added at this moment. You can
+                add them after creating the court.
+              </p>
+            </div>
+
+            {/* 
+              ===== Commented out original table code =====
+              <div className="caclcontent2">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>PRODUCT NAME</th>
+                      <th>RENTAL PRICE</th>
+                      <th>Qty-total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Array.isArray(Courts.data?.[index]?.equipment) ? (
+                      Courts.data?.[index]?.equipment.length > 0 ? (
+                        Courts.data?.[index]?.equipment.map((item, i) => {
+                          return (
+                            <tr key={i}>
+                              <td>{item.product_name}</td>
+                              <td>{item.rental_price} KS/Hr</td>
+                              <td>{item.qty_total}</td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <tr>
+                          <td colSpan={3}>no equipment</td>
+                        </tr>
+                      )
                     ) : (
                       <tr>
-                        <td colSpan={3}>no equipment</td>
+                        <td colSpan={3}>Loading...</td>
                       </tr>
-                    )
-                  ) : (
-                    <tr>
-                      <td colSpan={3}>Loading...</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            */}
+
             <div className="caclcontent3">
               <h3>ADVANTAGES & DISADVANTAGES</h3>
               <div className="caclcontent31">

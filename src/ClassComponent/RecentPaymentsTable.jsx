@@ -166,7 +166,7 @@ export default function RecentPaymentsTable({
 
   const handleExportToExcel = () => {
     if (filteredTransactions.length === 0) {
-      alert("Export ထုတ်ရန် ဒေတာ မရှိသေးပါ!");
+      //  alert("Export ထုတ်ရန် ဒေတာ မရှိသေးပါ!");
       return;
     }
 

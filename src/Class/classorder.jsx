@@ -81,7 +81,7 @@ function ClassOrder() {
   };
 
   async function ExportTable() {
-    alert("Please Read the documentation(document.txt) or comment");
+    //  alert("Please Read the documentation(document.txt) or comment");
     if (!filtered) return;
     let formattedData = filtered.map((item) => ({
       "Order Id": item.order_id,

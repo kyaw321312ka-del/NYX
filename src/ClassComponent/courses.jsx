@@ -268,7 +268,11 @@ const Courses = () => {
                   color: isDark ? "#94a3b8" : "#cbd5e1",
                   cursor: "pointer",
                 }}
-                onClick={() => setShowModal(false)}
+                onClick={() => {
+                  setShowModal(false);
+                  setImage(null); // Modal ပိတ်ရင် ပုံကို ရှင်းထုတ်ရန်
+                  setCourseName(""); // Course Name ပါ ရှင်းလိုပါက ထည့်နိုင်သည်
+                }}
               />
             </div>
 
@@ -315,7 +319,15 @@ const Courses = () => {
                 >
                   CATEGORY CARD THUMBNAIL *
                 </label>
-                <div
+                <input
+                  type="file"
+                  id="file-upload"
+                  style={{ display: "none" }}
+                  accept="image/*"
+                  onChange={(e) => setImage(e.target.files[0])}
+                />
+                <label
+                  htmlFor="file-upload"
                   style={{
                     border: `1.5px solid ${isDark ? "#334155" : "#e5e7eb"}`,
                     borderRadius: "8px",
@@ -323,36 +335,37 @@ const Courses = () => {
                     color: isDark ? "#ffffff" : "#111827",
                     height: "130px",
                     display: "flex",
-                    alignItems: "stretch",
+                    flexDirection: "column",
+                    alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
+                    backgroundImage: image
+                      ? `url(${URL.createObjectURL(image)})`
+                      : "none",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    position: "relative",
                   }}
                 >
-                  <input
-                    type="file"
-                    id="file-upload"
-                    style={{ display: "none" }}
-                    accept="image/*"
-                    onChange={(e) => setImage(e.target.files[0])}
-                  />
-                  <label
-                    htmlFor="file-upload"
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "8px",
-                      color: isDark ? "#94a3b8" : "#94a3b8",
-                      cursor: "pointer",
-                      width: "100%",
-                      height: "100%",
-                    }}
-                  >
-                    <PhotoCameraIcon style={{ fontSize: "2rem" }} />
-                    <span>{image ? image.name : "Upload Course Image"}</span>
-                  </label>
-                </div>
+                  {!image && (
+                    <>
+                      <PhotoCameraIcon
+                        style={{
+                          fontSize: "2rem",
+                          color: isDark ? "#94a3b8" : "#94a3b8",
+                        }}
+                      />
+                      <span
+                        style={{
+                          color: isDark ? "#94a3b8" : "#94a3b8",
+                          marginTop: "8px",
+                        }}
+                      >
+                        Upload Course Image
+                      </span>
+                    </>
+                  )}
+                </label>
               </div>
             </div>
 
@@ -372,12 +385,15 @@ const Courses = () => {
                   borderRadius: "8px",
                   backgroundColor: isDark ? "#1a1c1e" : "#ffffff",
                   color: isDark ? "#ffffff" : "#111827",
-                  borderRadius: "6px",
                   fontSize: "15px",
                   fontWeight: "600",
                   cursor: "pointer",
                 }}
-                onClick={() => setShowModal(false)}
+                onClick={() => {
+                  setShowModal(false);
+                  setImage(null); // Cancel နှိပ်ရင် ပုံကို ရှင်းထုတ်ရန်
+                  setCourseName("");
+                }}
               >
                 Cancel
               </button>

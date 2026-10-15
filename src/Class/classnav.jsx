@@ -153,7 +153,8 @@ function ClassNav() {
               )}
             </div>
 
-            <div className="training">
+            {/*
+ <div className="training">
               <button
                 className="dropdownbutton"
                 onClick={handleTourament}
@@ -186,6 +187,7 @@ function ClassNav() {
               )}
             </div>
 
+           */}
             <NavLink to="classsetting">Setting</NavLink>
 
             <button

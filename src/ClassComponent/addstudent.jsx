@@ -266,7 +266,7 @@ const AddStudentForm = ({ isDark }) => {
       }
 
       if (response.ok && result.success) {
-        alert(result.message || "Student added successfully!");
+        //  alert(result.message || "Student added successfully!");
         navigate("/class/classstudent", { state: { refresh: true } });
       } else {
         alert(result?.message || `Server error: ${response.status}`);
@@ -484,7 +484,7 @@ const AddStudentForm = ({ isDark }) => {
                 </div>
               )}
 
-              {/* Upload Area */}
+              {/* Upload Area with Preview Background */}
               <input
                 type="file"
                 ref={fileInputRef}
@@ -492,19 +492,31 @@ const AddStudentForm = ({ isDark }) => {
                 accept="image/jpeg,image/png,image/jpg,image/webp"
                 onChange={handleFileChange}
               />
-              <div className="upload-zone" onClick={handleUploadClick}>
-                <CloudUploadIcon className="upload-icon" />
-                <span>
-                  {selectedFile
-                    ? selectedFile.name
-                    : "Click to upload receipt *"}
-                </span>
+              <div
+                className="upload-zone"
+                onClick={handleUploadClick}
+                style={{
+                  backgroundImage: selectedFile
+                    ? `url(${URL.createObjectURL(selectedFile)})`
+                    : "none",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  position: "relative",
+                  minHeight: "120px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                }}
+              >
+                {!selectedFile && (
+                  <>
+                    <CloudUploadIcon className="upload-icon" />
+                    <span>Click to upload receipt *</span>
+                  </>
+                )}
               </div>
-              {selectedFile && (
-                <div className="file-success-msg">
-                  ✓ File selected: {(selectedFile.size / 1024).toFixed(2)} KB
-                </div>
-              )}
             </div>
 
             {/* Action Buttons */}

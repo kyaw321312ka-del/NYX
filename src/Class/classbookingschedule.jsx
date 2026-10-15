@@ -231,7 +231,6 @@ function BookingSchedule() {
                     >
                       <span className="cbscontenttext">
                         <h4>COURT {item.id}</h4>
-                        <p>AVAILABLE</p>
                       </span>
                       <div className="cbscontentimg">
                         {Array.isArray(item.gallery) &&

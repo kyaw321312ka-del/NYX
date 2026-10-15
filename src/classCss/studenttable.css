@@ -104,14 +104,16 @@
 }
 
 .st-search-box {
+  background-color: #ffffff;
+  border-color: #3b82f6;
   position: relative;
   width: 350px;
 }
 
 .st-search-input {
   width: 100%;
-  color: #ffffff;
-  border: none;
+  background-color: #ffffff;
+  border-color: #3b82f6;
   padding: 12px 44px 12px 16px;
   border-radius: 8px;
   box-sizing: border-box;

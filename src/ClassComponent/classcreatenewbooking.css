@@ -12,6 +12,7 @@
   font-family: "Inter", sans-serif;
   color: #1e293b;
   box-sizing: border-box;
+  overflow-y: auto; /* Page တစ်ခုလုံး Scroll ဆွဲလို့ရအောင် ပြင်ထားသည် */
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
@@ -26,6 +27,7 @@
   gap: 12px;
   height: 56px;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .back-nav-btn {
@@ -61,11 +63,10 @@
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: calc(100vh - 56px);
   padding: 16px;
   gap: 16px;
   box-sizing: border-box;
-  overflow: hidden;
+  min-height: calc(100vh - 56px);
 }
 
 /* Left Column */
@@ -74,7 +75,6 @@
   flex-direction: column;
   width: 62%;
   gap: 14px;
-  height: 100%;
 }
 
 /* Receipt Card */
@@ -209,8 +209,6 @@
   gap: 12px;
   border-radius: 10px;
   border: 1px solid #e2e8f0;
-  flex: 1;
-  overflow: hidden;
 }
 
 .createorderchoiceheader {
@@ -252,7 +250,7 @@
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   overflow: hidden;
-  flex: 1;
+  max-height: 200px;
 }
 
 .toorderheader {
@@ -280,8 +278,8 @@
 }
 
 .toorderlist {
-  flex: 1;
   overflow-y: auto;
+  max-height: 150px;
 }
 
 .toorderbody {
@@ -347,7 +345,7 @@
 .empty-cart-text {
   text-align: center;
   color: #94a3b8;
-  padding: 30px 0;
+  padding: 20px 0;
   margin: 0;
   font-size: 0.85rem;
 }
@@ -358,7 +356,6 @@
   width: 38%;
   flex-direction: column;
   gap: 14px;
-  height: 100%;
 }
 
 /* Summary Card */
@@ -410,8 +407,6 @@
 .orderprint {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  flex: 1;
   gap: 12px;
 }
 
@@ -423,7 +418,6 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  flex: 1;
 }
 
 .orderprintheader {
@@ -490,7 +484,6 @@
 }
 
 .createorderreceipet {
-  flex: 1;
   min-height: 100px;
   border-radius: 8px;
   border: 2px dashed #cbd5e1;
@@ -538,18 +531,18 @@
 .createorderbtn {
   display: flex;
   gap: 10px;
+  margin-bottom: 30px;
 }
 
 .createorderbtn button {
   flex: 1;
-  padding: 10px 5px;
+  padding: 12px 5px;
   border-radius: 8px;
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
   border: none;
   transition: opacity 0.2s ease;
-  margin-bottom: 20px;
 }
 
 .cancel-btn {
@@ -568,7 +561,170 @@
 }
 
 /* ==========================================
-   DARK MODE STYLES
+   SUCCESS MODAL STYLES (Centered & Clean)
+   ========================================== */
+.success-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  overflow-y: auto;
+  padding: 20px 0;
+}
+
+.success-modal-box {
+  background-color: #ffffff;
+  color: #111827;
+  border-radius: 16px;
+  width: 420px;
+  maxwidth: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  padding: 24px;
+  position: relative;
+}
+
+.success-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+}
+
+.success-modal-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.success-modal-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: #0f172a;
+}
+
+.success-modal-header p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.success-modal-divider {
+  border-bottom: 1px dashed #e2e8f0;
+  margin-bottom: 16px;
+}
+
+.success-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.receipt-key {
+  color: #64748b;
+}
+
+.receipt-val {
+  font-weight: 500;
+}
+
+.court-highlight {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.payment-method-text {
+  text-transform: uppercase;
+}
+
+.success-modal-divider-dashed {
+  border-bottom: 1px dashed #e2e8f0;
+  margin: 6px 0;
+}
+
+.rental-items-title {
+  font-weight: 600;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.receipt-sub-row {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 8px;
+  font-size: 12px;
+  color: #475569;
+}
+
+.receipt-total-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 15px;
+}
+
+.receipt-total-key {
+  font-weight: 700;
+}
+
+.receipt-total-val {
+  font-weight: 700;
+  color: #16a34a;
+}
+
+.success-modal-footer {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.modal-print-btn {
+  flex: 1;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  borderradius: 8px;
+  padding: 10px;
+  fontweight: 600;
+  fontsize: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.modal-close-btn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ==========================================
+   DARK MODE STYLES (Includes Modal Card)
    ========================================== */
 .createordermain.dark-mode {
   background-color: #1a1c1e;
@@ -579,6 +735,7 @@
 .createordermain.dark-mode .createorderselect,
 .createordermain.dark-mode .addclassorderchoice,
 .createordermain.dark-mode .orderamount,
+.createordermain.dark-mode .orderprint,
 .createordermain.dark-mode .orderprint1 {
   background-color: #27292d;
   border-color: #3a3d40;
@@ -676,5 +833,39 @@
 
 .createordermain.dark-mode .confirm-btn {
   background-color: #3b82f6;
+  color: #ffffff;
+}
+
+/* Dark Mode for Success Modal Card */
+.createordermain.dark-mode .success-modal-box {
+  background-color: #1a1c1e;
+  color: #ffffff;
+  border: 1px solid #3a3d40;
+}
+
+.createordermain.dark-mode .success-modal-header h2 {
+  color: #ffffff;
+}
+
+.createordermain.dark-mode .success-modal-header p,
+.createordermain.dark-mode .receipt-key,
+.createordermain.dark-mode .rental-items-title {
+  color: #94a3b8;
+}
+
+.createordermain.dark-mode .receipt-val,
+.createordermain.dark-mode .receipt-sub-row {
+  color: #e2e8f0;
+}
+
+.createordermain.dark-mode .success-modal-divider,
+.createordermain.dark-mode .success-modal-divider-dashed,
+.createordermain.dark-mode .receipt-total-row {
+  border-color: #3a3d40;
+}
+
+.createordermain.dark-mode .modal-close-btn {
+  background-color: #27292d;
+  border-color: #3a3d40;
   color: #ffffff;
 }

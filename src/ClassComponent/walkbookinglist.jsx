@@ -611,13 +611,13 @@ const WalkBookingList = () => {
 
                 {/* Button များကို Card အထဲသို့ ထည့်သွင်းထားသည် */}
                 <div className="payment-modal-actions">
-                  <button
+                  {/*       <button
                     className="payment-download-button"
                     onClick={downloadPaymentSuccess}
                   >
                     <Download className="payment-download-icon" />
                     Download
-                  </button>
+                  </button>*/}
 
                   <button
                     className="payment-print-button"
