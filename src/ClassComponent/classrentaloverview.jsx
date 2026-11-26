@@ -148,11 +148,11 @@ export default function ClassRentalOverview() {
 
   useEffect(() => {
     const mobileApiUrl =
-      "http://130.94.99.9:5000/api/mobilerental/showmobilebooking";
+      `${import.meta.env.VITE_BASE_URL}/api/mobilerental/showmobilebooking`;
     const localApiUrl =
-      "http://130.94.99.9:5000/api/localbooking/showlocalbooking";
+      `${import.meta.env.VITE_BASE_URL}/api/localbooking/showlocalbooking`;
     const overviewApiUrl =
-      "http://130.94.99.9:5000/api/rentaloverview/showrentaloverview";
+      `${import.meta.env.VITE_BASE_URL}/api/rentaloverview/showrentaloverview`;
 
     setLoading(true);
 

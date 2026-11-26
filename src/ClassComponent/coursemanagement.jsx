@@ -48,7 +48,7 @@ const CourseManagement = () => {
   const fetchCourses = async () => {
     try {
       const res = await fetch(
-        "http://130.94.99.9:5000/api/coursemanagement/showtraining",
+        `${import.meta.env.VITE_BASE_URL}/api/coursemanagement/showtraining`,
       );
 
       const data = await res.json();
@@ -112,7 +112,7 @@ const CourseManagement = () => {
 
     try {
       const response = await fetch(
-        `http://130.94.99.9:5000/api/coursemanagement/updatecourse/${selectedCourse.id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/coursemanagement/updatecourse/${selectedCourse.id}`,
         {
           method: "PUT",
           body: formData,
@@ -161,7 +161,7 @@ const CourseManagement = () => {
     const id = deleteConfirm.courseId;
     try {
       const response = await fetch(
-        `http://130.94.99.9:5000/api/course/deletetraining/${id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/course/deletetraining/${id}`,
         {
           method: "DELETE",
         },

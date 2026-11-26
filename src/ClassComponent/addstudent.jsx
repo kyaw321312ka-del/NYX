@@ -47,7 +47,7 @@ const AddStudentForm = ({ isDark }) => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        "http://130.94.99.9:5000/api/course/get_training_level_and_class",
+        `${import.meta.env.VITE_BASE_URL}/api/course/get_training_level_and_class`,
       );
 
       const result = await response.json();
@@ -103,7 +103,7 @@ const AddStudentForm = ({ isDark }) => {
   const fetchPaymentData = async () => {
     try {
       const response = await fetch(
-        "http://130.94.99.9:5000/api/payment/showpayment",
+        `${import.meta.env.VITE_BASE_URL}/api/payment/showpayment`,
       );
 
       const result = await response.json();
@@ -245,7 +245,7 @@ const AddStudentForm = ({ isDark }) => {
       const timeoutId = setTimeout(() => controller.abort(), 30000);
 
       const response = await fetch(
-        "http://130.94.99.9:5000/api/coursestudent/addtrainingstudent",
+        `${import.meta.env.VITE_BASE_URL}/api/coursestudent/addtrainingstudent`,
         {
           method: "POST",
           body: submitData,

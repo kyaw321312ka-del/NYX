@@ -43,7 +43,7 @@ function CreateTournament() {
     const fetchMatchFormats = async () => {
       try {
         const response = await fetch(
-          "http://130.94.99.9:5000/api/tournament/showmatchformats",
+          `${import.meta.env.VITE_BASE_URL}/api/tournament/showmatchformats`,
         );
 
         if (!response.ok) {
@@ -233,7 +233,7 @@ function CreateTournament() {
       formData.append("rank_points", JSON.stringify(normalizedRankPoints));
 
       const response = await fetch(
-        "http://130.94.99.9:5000/api/tournament/addtournament",
+        `${import.meta.env.VITE_BASE_URL}/api/tournament/addtournament`,
         {
           method: "POST",
           headers: contextData?.Token

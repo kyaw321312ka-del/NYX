@@ -44,7 +44,7 @@ function PosInventory() {
   const fetchInventoryStats = async () => {
     try {
       const response = await fetch(
-        "http://130.94.99.9:5000/api/inventory/totalinventory"
+        `${import.meta.env.VITE_BASE_URL}/api/inventory/totalinventory`
       );
       const data = await response.json();
       console.log("Inventory Stats:", data);

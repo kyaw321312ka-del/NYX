@@ -16,7 +16,7 @@ import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import deleteIcon from "../images/deleteicon.png";
 import { Context } from "../Hooks/context";
 
-const API_BASE = "http://130.94.99.9:5000";
+const API_BASE = `${import.meta.env.VITE_BASE_URL}`;
 
 const StudentsTable = () => {
   // Theme context detection

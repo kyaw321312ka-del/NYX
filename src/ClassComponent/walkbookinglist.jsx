@@ -30,8 +30,8 @@ import { Context } from "../Hooks/context";
 import "./walkbookinglist.css";
 
 const MOBILE_BOOKING_API_URL =
-  "http://130.94.99.9:5000/api/walk_in/mobile_booking_list";
-const LOCAL_API_URL = "http://130.94.99.9:5000/api/walk_in";
+  `${import.meta.env.VITE_BASE_URL}/api/walk_in/mobile_booking_list`;
+const LOCAL_API_URL = `${import.meta.env.VITE_BASE_URL}/api/walk_in`;
 const ITEMS_PER_PAGE = 20;
 
 const formatMoney = (value) => {

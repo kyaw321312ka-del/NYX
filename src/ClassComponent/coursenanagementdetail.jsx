@@ -13,7 +13,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutlined";
 import { Context } from "../Hooks/context"; // Context Import
 
-const API_BASE = "http://130.94.99.9:5000";
+const API_BASE = `${import.meta.env.VITE_BASE_URL}`;
 
 // Map level data from API to editable form
 const mapLevelToEditableData = (level) => {

@@ -44,7 +44,7 @@ export default function ChartSection({ onExport, isDark }) {
       setLoading(true);
       setError(null);
       const response = await fetch(
-        "http://130.94.99.9:5000/api/trainingoverview/showtrainingoverview",
+        `${import.meta.env.VITE_BASE_URL}/api/trainingoverview/showtrainingoverview`,
       );
       if (!response.ok) {
         throw new Error("Failed to fetch enrollment data");

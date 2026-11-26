@@ -142,7 +142,7 @@ function TournamentDetails() {
       }
 
       const response = await fetch(
-        `http://130.94.99.9:5000/api/tournament/updatetournament/${incomingData?.id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/tournament/updatetournament/${incomingData?.id}`,
         {
           method: "PUT",
           headers: contextData?.Token

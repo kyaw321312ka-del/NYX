@@ -18,8 +18,8 @@ import { Context } from "../Hooks/context"; // Context လမ်းကြော�
 import "./walkbooking.css";
 
 const COURT_FEE = 50000;
-const PAYMENT_LIST_URL = "http://130.94.99.9:5001/api/cart/showPayment";
-const CREATE_BOOKING_URL = "http://130.94.99.9:5000/api/walk_in/booking";
+const PAYMENT_LIST_URL = `${import.meta.env.VITE_PAYMENT_BASE_URL}/api/cart/showPayment`;
+const CREATE_BOOKING_URL = `${import.meta.env.VITE_BASE_URL}/api/walk_in/booking`;
 
 const courtList = [
   {

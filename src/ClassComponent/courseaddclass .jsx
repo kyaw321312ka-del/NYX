@@ -7,7 +7,7 @@ import AddIcon from "@mui/icons-material/Add";
 import "../classCss/courseaddclass.css";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const API_BASE = "http://130.94.99.9:5000";
+const API_BASE = `${import.meta.env.VITE_BASE_URL}`;
 
 const AddClassForm = () => {
   const [selectedDays, setSelectedDays] = useState("");

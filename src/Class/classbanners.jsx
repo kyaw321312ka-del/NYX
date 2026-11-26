@@ -37,7 +37,7 @@ function ClassBannners() {
     const loadTournamentBanners = async () => {
       try {
         const response = await fetch(
-          "http://130.94.99.9:5000/api/tournament/banner/showbanner",
+          `${import.meta.env.VITE_BASE_URL}/api/tournament/banner/showbanner`,
           {
             headers: contextData?.Token
               ? { Authorization: `Bearer ${contextData.Token}` }
@@ -97,7 +97,7 @@ function ClassBannners() {
 
     try {
       const response = await fetch(
-        "http://130.94.99.9:5000/api/tournament/banner/addbanner",
+        `${import.meta.env.VITE_BASE_URL}/api/tournament/banner/addbanner`,
         {
           method: "POST",
           headers: contextData?.Token
@@ -149,7 +149,7 @@ function ClassBannners() {
 
     try {
       const response = await fetch(
-        `http://130.94.99.9:5000/api/tournament/banner/deletebanner/${deleteTargetId}`,
+        `${import.meta.env.VITE_BASE_URL}/api/tournament/banner/deletebanner/${deleteTargetId}`,
         {
           method: "DELETE",
           headers: contextData?.Token

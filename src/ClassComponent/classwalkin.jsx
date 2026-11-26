@@ -15,9 +15,9 @@ import { useNoti } from "../Hooks/alert";
 import Switch from "@mui/material/Switch";
 import "./classwalkin.css";
 
-const WALK_IN_COURTS_URL = "http://130.94.99.9:5000/api/walk_in/court_list";
-const CREATE_WALK_IN_URL = "http://130.94.99.9:5000/api/walk_in";
-const UPDATE_WALK_IN_URL = "http://130.94.99.9:5000/api/walk_in";
+const WALK_IN_COURTS_URL = `${import.meta.env.VITE_BASE_URL}/api/walk_in/court_list`;
+const CREATE_WALK_IN_URL = `${import.meta.env.VITE_BASE_URL}/api/walk_in`;
+const UPDATE_WALK_IN_URL = `${import.meta.env.VITE_BASE_URL}/api/walk_in`;
 
 const firstValue = (...values) =>
   values.find((value) => value !== undefined && value !== null) ?? "";

@@ -62,7 +62,7 @@ function PosOverview() {
       setLoading(true);
       setError(null);
       const response = await fetch(
-        "http://130.94.99.9:5000/api/posoverview/showposoverview"
+        `${import.meta.env.VITE_BASE_URL}/api/posoverview/showposoverview`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch POS overview data");

@@ -99,7 +99,7 @@ function PosOrder() {
       setLoading(true);
       setError(null);
       const response = await fetch(
-        "http://130.94.99.9:5000/api/order/totalResult",
+        `${import.meta.env.VITE_BASE_URL}/api/order/totalResult`,
       );
       if (!response.ok) {
         throw new Error("Failed to fetch order statistics");

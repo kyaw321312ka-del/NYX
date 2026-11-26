@@ -67,7 +67,7 @@ function PosPaymentTax() {
     const loadAnnouncements = async () => {
       try {
         const response = await fetch(
-          "http://130.94.99.9:5000/api/banner/showbanner",
+          `${import.meta.env.VITE_BASE_URL}/api/banner/showbanner`,
           {
             headers: ContextData.Token
               ? { Authorization: `Bearer ${ContextData.Token}` }
@@ -133,7 +133,7 @@ function PosPaymentTax() {
 
     try {
       const response = await fetch(
-        `http://130.94.99.9:5000/api/banner/deletebanner/${id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/banner/deletebanner/${id}`,
         {
           method: "DELETE",
           headers: ContextData.Token
@@ -182,7 +182,7 @@ function PosPaymentTax() {
 
     try {
       const response = await fetch(
-        "http://130.94.99.9:5000/api/banner/addbanner",
+        `${import.meta.env.VITE_BASE_URL}/api/banner/addbanner`,
         {
           method: "POST",
           headers: ContextData.Token

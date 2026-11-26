@@ -88,7 +88,7 @@ function ClassCustomer() {
 
     try {
       const response = await fetch(
-        `http://130.94.99.9:5000/api/customer/updatecustomer/${id}/true`,
+        `${import.meta.env.VITE_BASE_URL}/api/customer/updatecustomer/${id}/true`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -154,7 +154,7 @@ function ClassCustomer() {
 
     try {
       const response = await fetch(
-        `http://130.94.99.9:5000/api/customer/updatecustomer/${id}/false`,
+        `${import.meta.env.VITE_BASE_URL}/api/customer/updatecustomer/${id}/false`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

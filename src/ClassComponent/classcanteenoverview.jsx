@@ -148,7 +148,7 @@ export default function ClassCanteenOverview(props) {
     const fetchOverviewData = async () => {
       try {
         const response = await fetch(
-          "http://130.94.99.9:5000/api/canteenoverview/showcanteenoverview",
+          `${import.meta.env.VITE_BASE_URL}/api/canteenoverview/showcanteenoverview`,
         );
         const json = await response.json();
 
@@ -196,7 +196,7 @@ export default function ClassCanteenOverview(props) {
     const fetchTableOrders = async () => {
       try {
         const response = await fetch(
-          "http://130.94.99.9:5000/api/canteenorder/showcanteenorder",
+          `${import.meta.env.VITE_BASE_URL}/api/canteenorder/showcanteenorder`,
         );
         const json = await response.json();
         if (json.data && Array.isArray(json.data)) {

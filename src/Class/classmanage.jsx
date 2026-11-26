@@ -130,7 +130,7 @@ const Manage = () => {
       try {
         setLoadError("");
         const response = await fetch(
-          "http://130.94.99.9:5000/api/tournament/showtournaments",
+          `${import.meta.env.VITE_BASE_URL}/api/tournament/showtournaments`,
         );
 
         if (!response.ok) {
@@ -198,7 +198,7 @@ const Manage = () => {
 
     try {
       const response = await fetch(
-        `http://130.94.99.9:5000/api/tournament/deletetournament/${deleteTarget.id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/tournament/deletetournament/${deleteTarget.id}`,
         {
           method: "DELETE",
           headers: Token ? { Authorization: `Bearer ${Token}` } : undefined,

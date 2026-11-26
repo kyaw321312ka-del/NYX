@@ -24,7 +24,7 @@ const Courses = () => {
   const fetchCourses = async () => {
     try {
       const res = await fetch(
-        "http://130.94.99.9:5000/api/coursemanagement/showtraining",
+        `${import.meta.env.VITE_BASE_URL}/api/coursemanagement/showtraining`,
       );
       const data = await res.json();
       setCourses(Array.isArray(data) ? data : data?.data || []);
@@ -50,7 +50,7 @@ const Courses = () => {
 
     try {
       const res = await fetch(
-        "http://130.94.99.9:5000/api/coursemanagement/addcourse",
+        `${import.meta.env.VITE_BASE_URL}/api/coursemanagement/addcourse`,
         {
           method: "POST",
           body: formData,
