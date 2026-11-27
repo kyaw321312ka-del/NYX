@@ -1,0 +1,76 @@
+name: Build and deploy frontend
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: frontend-deploy
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production bundle
+        run: |
+          test -n "$VITE_BASE_URL" || { echo "::error::VITE_BASE_URL secret is required"; exit 1; }
+          test -n "$VITE_PAYMENT_BASE_URL" || { echo "::error::VITE_PAYMENT_BASE_URL secret is required"; exit 1; }
+          npm run build
+        env:
+          VITE_BASE_URL: ${{ secrets.VITE_BASE_URL }}
+          VITE_PAYMENT_BASE_URL: ${{ secrets.VITE_PAYMENT_BASE_URL }}
+
+      - name: Configure SSH
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+
+      - name: Deploy built frontend
+        run: |
+          test -n "$VPS_HOST" || { echo "::error::VPS_HOST secret is required"; exit 1; }
+          test -n "$VPS_PORT" || { echo "::error::VPS_PORT secret is required"; exit 1; }
+          [[ "$VPS_PORT" =~ ^[0-9]+$ ]] || { echo "::error::VPS_PORT must be numeric"; exit 1; }
+          test -n "$VPS_USER" || { echo "::error::VPS_USER secret is required"; exit 1; }
+          test -n "$VPS_DEPLOY_PATH" || { echo "::error::VPS_DEPLOY_PATH secret is required"; exit 1; }
+          test -n "$VPS_KNOWN_HOSTS" || { echo "::error::VPS_KNOWN_HOSTS secret is required"; exit 1; }
+          [[ "$VPS_DEPLOY_PATH" =~ ^/[A-Za-z0-9._/-]+$ && "$VPS_DEPLOY_PATH" != "/" ]] || {
+            echo "::error::VPS_DEPLOY_PATH must be a non-root absolute path without spaces"
+            exit 1
+          }
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=yes \
+            "$VPS_USER@$VPS_HOST" "mkdir -p '$VPS_DEPLOY_PATH'"
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=yes" \
+            dist/ "$VPS_USER@$VPS_HOST:$VPS_DEPLOY_PATH/"
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_DEPLOY_PATH: ${{ secrets.VPS_DEPLOY_PATH }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}

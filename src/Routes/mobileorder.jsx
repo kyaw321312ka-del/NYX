@@ -64,7 +64,7 @@ function MobileOrder() {
     let status = event.target.value;
     let id = item.order_id;
     try {
-      let reponse = await fetch(`${import.meta.env.VITE_UPDATE_ORDER}/${id}`, {
+      let reponse = await fetch(`${(import.meta.env.VITE_BASE_URL + "/api/order/updateorderaction")}/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: status }),

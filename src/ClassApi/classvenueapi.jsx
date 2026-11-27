@@ -9,7 +9,7 @@ export const useGetClassVenue = () => {
     console.log("api calling");
     try {
       let response = await fetch(
-        `${import.meta.env.VITE_CLASS_GET_COURT}/${id}`,
+        `${(import.meta.env.VITE_BASE_URL + "/api/venue/showcourt")}/${id}`,
         {
           method: "GET",
         },
@@ -28,7 +28,7 @@ export const useGetClassVenue = () => {
 
   const GetVenue = useCallback(async (ID) => {
     try {
-      let response = await fetch(import.meta.env.VITE_CLASS_GET_VENUE, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/venue/showvenue"), {
         method: "GET",
       });
       if (response.ok) {

@@ -5,7 +5,7 @@ export const useGetClassOrder = () => {
 
   const GetOrder = useCallback(async () => {
     try {
-      let response = await fetch(import.meta.env.VITE_CLASS_GET_CANTEEM_ORDER, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/canteenorder/showcanteenorder"), {
         method: "GET",
       });
       if (response.ok) {

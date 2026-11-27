@@ -5,7 +5,7 @@ export const useGetGeneralSetting = () => {
 
   const GetGenerals = useCallback(async () => {
     try {
-      let response = await fetch(import.meta.env.VITE_GET_GENERAL, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/generalsetting/showgeneral"), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -33,7 +33,7 @@ function ClassEquipmentPopup({ data }) {
     };
     openloading();
     try {
-      let response = await fetch(import.meta.env.VITE_CLASS_ADD_EQUIPMENT, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/venue/addequipment"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +68,7 @@ function ClassEquipmentPopup({ data }) {
     };
     openloading();
     try {
-      const editUrl = import.meta.env.VITE_CLASS_EDIT_EQUIPMENT.replace(
+      const editUrl = (import.meta.env.VITE_BASE_URL + "/api/venue/equipment/:equipmentId").replace(
         ":equipmentId",
         encodeURIComponent(info.id),
       );

@@ -109,7 +109,7 @@ function PosGeneralSetting() {
 
       const updating = toast.loading("Saving Changes...");
       try {
-        let response = await fetch(import.meta.env.VITE_UPDATE_GENERAL, {
+        let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/generalsetting/updategeneral"), {
           method: "PUT",
           body: fromdata,
         });

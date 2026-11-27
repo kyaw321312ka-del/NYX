@@ -68,7 +68,7 @@ function ClassVenueAdd({ data }) {
 
     try {
       let response = await fetch(
-        `${import.meta.env.VITE_CLASS_DELETE_VENUE}/${id}`,
+        `${(import.meta.env.VITE_BASE_URL + "/api/venue/deletevenue")}/${id}`,
         {
           method: "DELETE",
         },
@@ -115,7 +115,7 @@ function ClassVenueAdd({ data }) {
     formData.append("available", checkboxref.current.checked);
 
     try {
-      let response = await fetch(import.meta.env.VITE_CLASS_ADD_VENUE, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/venue/addvenue"), {
         method: "POST",
         body: formData,
       });
@@ -173,7 +173,7 @@ function ClassVenueAdd({ data }) {
 
     try {
       let response = await fetch(
-        `${import.meta.env.VITE_CLASS_UPDATE_VENUE}/${id}`,
+        `${(import.meta.env.VITE_BASE_URL + "/api/venue/updatevenue")}/${id}`,
         {
           method: "PUT",
           body: formData,

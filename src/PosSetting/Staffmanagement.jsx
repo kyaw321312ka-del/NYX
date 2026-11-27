@@ -63,7 +63,7 @@ function StaffManagement() {
     };
     const adding = toast.loading("Adding New Staff");
     try {
-      let response = await fetch(import.meta.env.VITE_ADD_NEWSTAFF, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/setting/newstaff"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -90,7 +90,7 @@ function StaffManagement() {
   async function delete_staff(id) {
     const deleting = toast.loading("Please Wait");
     try {
-      let response = await fetch(`${import.meta.env.VITE_DELETE_STAFF}/${id}`, {
+      let response = await fetch(`${(import.meta.env.VITE_BASE_URL + "/api/setting/deletestaff")}/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

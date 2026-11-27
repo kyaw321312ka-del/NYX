@@ -79,7 +79,7 @@ function ClassCourtDetail({ data }) {
     };
     openloading();
     try {
-      let response = await fetch(import.meta.env.VITE_CLASS_ADD_TIMESLOT, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/venue/addcourttime"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -109,7 +109,7 @@ function ClassCourtDetail({ data }) {
     try {
       openloading();
       let response = await fetch(
-        `${import.meta.env.VITE_CLASS_DELETE_EQUIPMENT}/${id}`,
+        `${(import.meta.env.VITE_BASE_URL + "/api/venue/deleteequipment")}/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -134,11 +134,11 @@ function ClassCourtDetail({ data }) {
   async function delete_data(id, target) {
     if (!id) return;
     let url = [
-      import.meta.env.VITE_CLASS_DELETE_CON, // 0 for con
-      import.meta.env.VITE_CLASS_DELETE_PRO, // 1 for pro
-      import.meta.env.VITE_CLASS_DELETE_RULE, // 2 for rule
-      import.meta.env.VITE_CLASS_DELETE_SERVICE, // 3 for service
-      import.meta.env.VITE_CLASS_DELETE_TIMESLOT, // 4 for timeslot
+      (import.meta.env.VITE_BASE_URL + "/api/venue/deletecons"), // 0 for con
+      (import.meta.env.VITE_BASE_URL + "/api/venue/deletepros"), // 1 for pro
+      (import.meta.env.VITE_BASE_URL + "/api/venue/deleterule"), // 2 for rule
+      (import.meta.env.VITE_BASE_URL + "/api/venue/deleteservice"), // 3 for service
+      (import.meta.env.VITE_BASE_URL + "/api/venue/deletecourttimeslot"), // 4 for timeslot
     ];
     let api = url[target];
     if (!api) return;
@@ -180,7 +180,7 @@ function ClassCourtDetail({ data }) {
 
     openloading();
     try {
-      let response = await fetch(import.meta.env.VITE_CLASS_ADD_COURT_GALLERY, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/venue/addcourtgallery"), {
         method: "POST",
         body: formData,
       });

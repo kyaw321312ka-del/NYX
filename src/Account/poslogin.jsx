@@ -18,7 +18,7 @@ function PosLogin() {
       password: passwordref.current.value,
     };
     try {
-      let response = await fetch(import.meta.env.VITE_ADMIN_LOGIN, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/auth/adminlogin"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

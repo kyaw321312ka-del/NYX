@@ -65,7 +65,7 @@ function ClassAddCourt() {
     if (!rule.header || !rule.body) return { ok: true };
 
     try {
-      let response = await fetch(`${import.meta.env.VITE_CLASS_ADD_RULE}`, {
+      let response = await fetch(`${(import.meta.env.VITE_BASE_URL + "/api/venue/addrule")}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -88,7 +88,7 @@ function ClassAddCourt() {
     if (!id) return { ok: true };
     if (!pro || pro == null) return { ok: true };
     try {
-      let response = await fetch(`${import.meta.env.VITE_CLASS_ADD_PRO}`, {
+      let response = await fetch(`${(import.meta.env.VITE_BASE_URL + "/api/venue/addpros")}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -107,7 +107,7 @@ function ClassAddCourt() {
     if (!id) return { ok: true };
     if (!con || con == null) return { ok: true };
     try {
-      let response = await fetch(`${import.meta.env.VITE_CLASS_ADD_CON}`, {
+      let response = await fetch(`${(import.meta.env.VITE_BASE_URL + "/api/venue/addcons")}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -129,7 +129,7 @@ function ClassAddCourt() {
     if (!venue_id) return { ok: true };
     if (!service || service == null) return { ok: true };
     try {
-      let response = await fetch(`${import.meta.env.VITE_CLASS_ADD_SERVICE}`, {
+      let response = await fetch(`${(import.meta.env.VITE_BASE_URL + "/api/venue/addservice")}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -155,7 +155,7 @@ function ClassAddCourt() {
     formData.append("court_gallery", fileref.current.files[0]);
 
     try {
-      let response = await fetch(import.meta.env.VITE_CLASS_ADD_COURT_GALLERY, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/venue/addcourtgallery"), {
         method: "POST",
         body: formData,
       });
@@ -182,7 +182,7 @@ function ClassAddCourt() {
     };
 
     try {
-      let response = await fetch(import.meta.env.VITE_CLASS_ADD_COURT, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/venue/addcourt"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

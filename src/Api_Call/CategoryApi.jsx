@@ -5,7 +5,7 @@ export const useGetCategory = () => {
   const [Tags, setTags] = useState([]);
 
   const GetCategories = useCallback(async () => {
-    const url = import.meta.env.VITE_GET_CATEGORIES;
+    const url = (import.meta.env.VITE_BASE_URL + "/api/showcat/showcategory");
     try {
       let reponse = await fetch(url, {
         method: "GET",
@@ -24,7 +24,7 @@ export const useGetCategory = () => {
 
   const GetTags = useCallback(async () => {
     try {
-      let reponse = await fetch(import.meta.env.VITE_GET_TAGS, {
+      let reponse = await fetch((import.meta.env.VITE_BASE_URL + "/api/showtag/showtags"), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

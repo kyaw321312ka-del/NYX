@@ -77,7 +77,7 @@ function AddMenuPopUp({ data }) {
     //if (openloading) openloading();
 
     try {
-      let response = await fetch(import.meta.env.VITE_CLASS_ADD_MENU, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/menus/addmenu"), {
         method: "POST",
         body: formData,
       });
@@ -138,7 +138,7 @@ function AddMenuPopUp({ data }) {
 
     try {
       let response = await fetch(
-        `${import.meta.env.VITE_CLASS_UPDATE_MENU}/${id}`,
+        `${(import.meta.env.VITE_BASE_URL + "/api/menus/updatemenu")}/${id}`,
         {
           method: "PUT",
           body: formData,
@@ -205,7 +205,7 @@ function AddMenuPopUp({ data }) {
 
     try {
       let response = await fetch(
-        `${import.meta.env.VITE_CLASS_DELETE_MENU}/${id}`,
+        `${(import.meta.env.VITE_BASE_URL + "/api/menus/deletemenu")}/${id}`,
         {
           method: "DELETE",
         },

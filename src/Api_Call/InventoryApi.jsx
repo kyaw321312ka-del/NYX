@@ -5,7 +5,7 @@ export const useGetInventroy = () => {
 
   const GetInventory = useCallback(async () => {
     try {
-      let reponse = await fetch(import.meta.env.VITE_GET_INVENTORY, {
+      let reponse = await fetch((import.meta.env.VITE_BASE_URL + "/api/inventory/showinventory"), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

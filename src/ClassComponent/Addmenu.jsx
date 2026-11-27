@@ -132,7 +132,7 @@ function AddMenu() {
     try {
       openloading();
       const response = await fetch(
-        import.meta.env.VITE_CLASS_ADD_CANTEEN_ORDER,
+        (import.meta.env.VITE_BASE_URL + "/api/canteenorder/addcanteenorder"),
         {
           method: "POST",
           body: formData,

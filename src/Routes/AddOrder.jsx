@@ -156,7 +156,7 @@ function AddOrder() {
     formData.append("items", JSON.stringify(delta));
     openloading();
     try {
-      let response = await fetch(import.meta.env.VITE_ADD_ORDER, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/order/addorder"), {
         method: "POST",
         body: formData,
       });

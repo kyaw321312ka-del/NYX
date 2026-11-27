@@ -100,7 +100,7 @@ function ClassLoaclBooking() {
     openloading();
     try {
       let response = await fetch(
-        `${import.meta.env.VITE_CLASS_DELETE_LOCAL_BOOKING}/${id}`,
+        `${(import.meta.env.VITE_BASE_URL + "/api/course/deletetrainingstudent")}/${id}`,
         {
           method: "DELETE",
         },

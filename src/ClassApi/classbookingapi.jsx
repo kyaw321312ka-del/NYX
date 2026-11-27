@@ -7,7 +7,7 @@ export const useGetClassBooking = () => {
   const GetMobileBooking = useCallback(async () => {
     try {
       let response = await fetch(
-        import.meta.env.VITE_CLASS_GET_MOBILE_BOOKING,
+        (import.meta.env.VITE_BASE_URL + "/api/mobilerental/showmobilebooking"),
         {
           method: "GET",
         },
@@ -23,7 +23,7 @@ export const useGetClassBooking = () => {
 
   const GetLocalBooking = useCallback(async () => {
     try {
-      let response = await fetch(import.meta.env.VITE_CLASS_GET_LOCAL_BOOKING, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/localbooking/showlocalbooking"), {
         method: "GET",
       });
       if (response.ok) {

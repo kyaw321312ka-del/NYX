@@ -6,7 +6,7 @@ export const useGetClassOverview = () => {
   const GetTrainingOverview = useCallback(async () => {
     try {
       let response = await fetch(
-        import.meta.env.VITE_CLASS_GET_TRAINING_OVERVIEW,
+        (import.meta.env.VITE_BASE_URL + "/api/trainingoverview/showtrainingoverview"),
         {
           method: "GET",
         },

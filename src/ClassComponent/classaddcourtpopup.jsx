@@ -23,10 +23,10 @@ function ClassCourtPopUp({ data }) {
   async function class_court_add(e) {
     e.preventDefault();
     const url = {
-      1: import.meta.env.VITE_CLASS_ADD_PRO,
-      2: import.meta.env.VITE_CLASS_ADD_CON,
-      3: import.meta.env.VITE_CLASS_ADD_SERVICE,
-      4: import.meta.env.VITE_CLASS_ADD_RULE,
+      1: (import.meta.env.VITE_BASE_URL + "/api/venue/addpros"),
+      2: (import.meta.env.VITE_BASE_URL + "/api/venue/addcons"),
+      3: (import.meta.env.VITE_BASE_URL + "/api/venue/addservice"),
+      4: (import.meta.env.VITE_BASE_URL + "/api/venue/addrule"),
     };
 
     let text = {};

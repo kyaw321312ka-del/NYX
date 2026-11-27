@@ -5,7 +5,7 @@ export const useGetStaff = () => {
 
   const GetStaff = useCallback(async () => {
     try {
-      let response = await fetch(import.meta.env.VITE_GET_STAFFS, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/setting/showstaff"), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

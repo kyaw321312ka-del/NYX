@@ -5,7 +5,7 @@ export const useGetClassCustomer = () => {
 
   const GetClassCustomers = useCallback(async () => {
     try {
-      let response = await fetch(import.meta.env.VITE_CLASS_GET_CUSTOMER, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/bookingcustomer/showcustomer"), {
         method: "GET",
       });
       if (response.ok) {

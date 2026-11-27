@@ -7,7 +7,7 @@ export const useGetOrder = () => {
 
   const GetMobileOrders = useCallback(async () => {
     try {
-      let reponse = await fetch(import.meta.env.VITE_GET_MOBILEORDER, {
+      let reponse = await fetch((import.meta.env.VITE_BASE_URL + "/api/order/showmobileorder"), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export const useGetOrder = () => {
 
   const GetLocalOrders = useCallback(async () => {
     try {
-      let response = await fetch(import.meta.env.VITE_GET_LOCALORDER, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/order/showadminorder"), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +42,7 @@ export const useGetOrder = () => {
 
   const GetOrderHeader = useCallback(async () => {
     try {
-      let response = await fetch(import.meta.env.VITE_GET_ORDERHEADER, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/order/totalResult"), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

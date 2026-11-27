@@ -220,7 +220,7 @@ function ClassCustomer() {
 
     try {
       let response = await fetch(
-        `${import.meta.env.VITE_CLASS_DELETE_MOBILE_BOOKING}/${id}`,
+        `${(import.meta.env.VITE_BASE_URL + "/api/mobilerental/deletemobilebooking")}/${id}`,
         { method: "DELETE" },
       );
 

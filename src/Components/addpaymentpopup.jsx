@@ -50,7 +50,7 @@ function AddPaymentPopUp({ data, updfun, FTS, items, setitems }) {
     const loading = toast.loading("Please wait");
 
     try {
-      let response = await fetch(import.meta.env.VITE_ADD_PAYMENT, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/payment/addpayment"), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${Token}`,
@@ -82,7 +82,7 @@ function AddPaymentPopUp({ data, updfun, FTS, items, setitems }) {
     const deleting = toast.loading("Please Wait...");
     try {
       let response = await fetch(
-        `${import.meta.env.VITE_DELETE_PAYMENT}/${id}`,
+        `${(import.meta.env.VITE_BASE_URL + "/api/payment/deletepayment")}/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -133,7 +133,7 @@ function AddPaymentPopUp({ data, updfun, FTS, items, setitems }) {
 
     try {
       let response = await fetch(
-        `${import.meta.env.VITE_UPDATE_PAYMENT}/${id}`,
+        `${(import.meta.env.VITE_BASE_URL + "/api/payment/updatepayment")}/${id}`,
         {
           method: "PUT",
           headers: {

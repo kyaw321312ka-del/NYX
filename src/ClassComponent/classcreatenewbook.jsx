@@ -176,7 +176,7 @@ function ClassCreateBooking({ data }) {
 
     try {
       openloading();
-      let response = await fetch(import.meta.env.VITE_CLASS_ADD_LOCAL_BOOKING, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/localbooking/addlocalbooking"), {
         method: "POST",
         body: formData,
       });

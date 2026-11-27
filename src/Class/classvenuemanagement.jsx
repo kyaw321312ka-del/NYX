@@ -46,7 +46,7 @@ function VenueManagement() {
     openloading();
     try {
       let response = await fetch(
-        `${import.meta.env.VITE_CLASS_COURT_UPDATE_AVAILABLE}/${item.id}/${!item.court_active}`,
+        `${(import.meta.env.VITE_BASE_URL + "/api/venue/activecourt")}/${item.id}/${!item.court_active}`,
         {
           method: "PUT",
           headers: {

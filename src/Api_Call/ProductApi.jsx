@@ -5,7 +5,7 @@ export const useGetProducts = () => {
 
   const GetProducts = useCallback(async () => {
     try {
-      let reponse = await fetch(import.meta.env.VITE_GET_PRODUCTS, {
+      let reponse = await fetch((import.meta.env.VITE_BASE_URL + "/api/showpro/showproduct"), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

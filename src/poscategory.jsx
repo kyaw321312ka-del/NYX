@@ -58,7 +58,7 @@ function PosCategory() {
     formdata.append("name", Categoryname.current.value);
     openloading();
     try {
-      let reponse = await fetch(import.meta.env.VITE_ADD_CATEGORY, {
+      let reponse = await fetch((import.meta.env.VITE_BASE_URL + "/api/categories/addCategories"), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${Token}`,
@@ -85,7 +85,7 @@ function PosCategory() {
     let data = { name: Tagsref.current.value };
     openloading();
     try {
-      let reponse = await fetch(import.meta.env.VITE_ADD_TAGS, {
+      let reponse = await fetch((import.meta.env.VITE_BASE_URL + "/api/tags/addtag"), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${Token}`,
@@ -141,7 +141,7 @@ function PosCategory() {
     }
     openloading();
     try {
-      let reponse = await fetch(import.meta.env.VITE_UPDATE_CATEGORY, {
+      let reponse = await fetch((import.meta.env.VITE_BASE_URL + "/api/updateCat/updatecategory"), {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${Token}`,
@@ -183,7 +183,7 @@ function PosCategory() {
     }
     openloading();
     try {
-      let response = await fetch(import.meta.env.VITE_UPDATE_TAGS, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/updateTag/updatetag"), {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${Token}`,
@@ -222,7 +222,7 @@ function PosCategory() {
     const tagdelete = toast.loading("Deleting Tags...");
     try {
       let reponse = await fetch(
-        `${import.meta.env.VITE_DELETE_TAGS}${tagsName}`,
+        `${(import.meta.env.VITE_BASE_URL + "/api/deletetag/deletetag/")}${tagsName}`,
         {
           method: "DELETE",
           headers: {
@@ -262,7 +262,7 @@ function PosCategory() {
 
     try {
       let reponse = await fetch(
-        `${import.meta.env.VITE_DELETE_CATEGORY}${data}`,
+        `${(import.meta.env.VITE_BASE_URL + "/api/deletecat/deletecategory/")}${data}`,
         {
           method: "DELETE",
         },

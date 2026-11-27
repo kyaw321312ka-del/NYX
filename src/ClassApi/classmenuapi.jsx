@@ -5,7 +5,7 @@ export const useGetClassMenu = () => {
 
   const GetClassmenu = useCallback(async () => {
     try {
-      let response = await fetch(import.meta.env.VITE_CLASS_GET_MENU, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/menus/showmenu"), {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });

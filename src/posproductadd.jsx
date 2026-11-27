@@ -85,7 +85,7 @@ function AddProduct() {
       formdata.append("date", dateref.current.value);
       formdata.append("image", imageref.current.files[0]);
 
-      let reponse = await fetch(import.meta.env.VITE_ADD_PRODUCT, {
+      let reponse = await fetch((import.meta.env.VITE_BASE_URL + "/api/product/addproduct"), {
         method: "POST",
         body: formdata,
       });
@@ -129,7 +129,7 @@ function AddProduct() {
     openloading();
     try {
       let reponse = await fetch(
-        `${import.meta.env.VITE_DELETE_PRODUCT}/${id}`,
+        `${(import.meta.env.VITE_BASE_URL + "/api/deleteproducts/deleteproduct")}/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -176,7 +176,7 @@ function AddProduct() {
         formdata.append("image", imageref.current.files[0]);
       }
       openloading();
-      let reponse = await fetch(import.meta.env.VITE_UPDATE_PRODUCT, {
+      let reponse = await fetch((import.meta.env.VITE_BASE_URL + "/api/updateshowproduct/updateproduct"), {
         method: "PUT",
         body: formdata,
       });

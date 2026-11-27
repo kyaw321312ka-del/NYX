@@ -8,7 +8,7 @@ export const useGetClassBookingSchedule = () => {
     console.log("api calling from classbooing shcedule");
     try {
       let response = await fetch(
-        `${import.meta.env.VITE_CLASS_GET_REMAIN_BOOKING}/${id}/${date}`,
+        `${(import.meta.env.VITE_BASE_URL + "/api/venue/remainbookingslot")}/${id}/${date}`,
         {
           method: "GET",
         },

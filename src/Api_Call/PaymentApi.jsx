@@ -9,7 +9,7 @@ export const useGetPayment = () => {
 
   const GetPayment = useCallback(async () => {
     try {
-      let response = await fetch(import.meta.env.VITE_GET_PAYMENT, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/payment/showpayment"), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -27,7 +27,7 @@ export const useGetPayment = () => {
 
   const GetTax = useCallback(async () => {
     try {
-      let response = await fetch(import.meta.env.VITE_GET_TAX, {
+      let response = await fetch((import.meta.env.VITE_BASE_URL + "/api/payment/showtax"), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

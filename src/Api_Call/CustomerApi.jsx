@@ -5,7 +5,7 @@ export const useGetCustomer = () => {
 
   const GetCustomer = useCallback(async () => {
     try {
-      let reponse = await fetch(import.meta.env.VITE_GET_CUSTOMERS, {
+      let reponse = await fetch((import.meta.env.VITE_BASE_URL + "/api/customer/showcustomer"), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
