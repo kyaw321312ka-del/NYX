@@ -1,0 +1,497 @@
+import SearchIcon from "@mui/icons-material/SearchOutlined";
+import CustomerLoading from "../../../../shared/components/LoadingCustomer";
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
+import Swal from "sweetalert2";
+import { useEffect, useState, useContext } from "react";
+import useReceipt from "../../../../shared/components/Receipt";
+import { useGetOrder } from "../../services";
+import * as XLSX from "xlsx";
+import { useTableFooter } from "../../../../shared/hooks/useTableFooter";
+import { Context } from "../../../../shared/hooks/AppContext";
+
+function MobileOrder() {
+  const [text, settext] = useState("");
+  const [filterdata, setfilterdata] = useState(null);
+
+  const { open, ReceipetJsx } = useReceipt();
+  const { MOrders, GetMobileOrders } = useGetOrder();
+  const { TableFooterJsx, startnumber, endnumber } = useTableFooter(filterdata);
+  const { backcolor } = useContext(Context);
+
+  const isDarkMode = Boolean(backcolor === "#1A1C1E");
+
+  // 🌓 Dark Mode / Light Mode Theme Configuration
+  const themeStyles = {
+    color: isDarkMode ? "#F8FAFC" : "#0F172A",
+    cardBg: isDarkMode ? "#1E293B" : "#FFFFFF",
+    borderColor: isDarkMode ? "#334155" : "#E2E8F0",
+    inputBg: isDarkMode ? "#334155" : "#F8FAFC",
+    exportBtnBg: isDarkMode ? "#6366F1" : "#0F172A", // Dark mode မှာ ခရမ်းပြာရောင် သုံးပေးထားပါတယ်
+  };
+
+  useEffect(() => {
+    if (!MOrders.data) return;
+    if (text === "") {
+      setfilterdata(MOrders.data);
+    } else {
+      let filtered = MOrders.data.filter((item) => {
+        return item.customer_name.toLowerCase().includes(text.toLowerCase());
+      });
+      setfilterdata(filtered);
+    }
+  }, [text, MOrders.data]);
+
+  useEffect(() => {
+    GetMobileOrders();
+  }, []);
+
+  const changetext = (event) => {
+    settext(event.target.value);
+  };
+
+  const showImagePreview = (imageUrl) => {
+    Swal.fire({
+      imageUrl: imageUrl,
+      imageAlt: "Payment Proof",
+      showConfirmButton: false,
+      showCloseButton: false,
+      background: "transparent",
+      customClass: { image: "preview-image-style" },
+    });
+  };
+
+  async function UpdateOrder(item, event) {
+    let status = event.target.value;
+    let id = item.order_id;
+    try {
+      let reponse = await fetch(`${(import.meta.env.VITE_BASE_URL + "/api/order/updateorderaction")}/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: status }),
+      });
+      if (reponse.ok) {
+        await GetMobileOrders();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function show_order(info) {
+    if (!info) return null;
+    let formatData = {
+      order_no: info.order_id,
+      payment: info.payment_method,
+      Date: info.Date,
+      Time: info.Time,
+      items: info.items.map((item) => ({
+        ...item,
+        productName: item.product_name,
+      })),
+      item_Qty: info.items.length,
+      item_amount: info.Sub_total,
+      tax: info.tax,
+      dfee: info.develivery_fee || 0,
+      total_amount: info.Total,
+    };
+    open(formatData);
+  }
+
+  async function ExportTable() {
+    if (!filterdata) return;
+    let formattedData = filterdata.map((item) => ({
+      "Order Id": item.order_id,
+      Customer: item.customer_name,
+      Amount: item.Total,
+      Date: item.Date,
+      Time: item.Time,
+      Payment: item.payment_method,
+      "Order Status": item.order_status,
+    }));
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sales Report");
+    XLSX.writeFile(workbook, "sales-report.xlsx");
+  }
+
+  const currentRowsCount = Array.isArray(filterdata)
+    ? filterdata.slice(startnumber, endnumber).length
+    : 0;
+
+  return (
+    <div style={{ padding: "0px", marginTop: "20px" }}>
+      {ReceipetJsx}
+
+      {/* 📦 Table Container Card */}
+      <div
+        style={{
+          padding: "24px",
+          borderRadius: "16px",
+          border: `1px solid ${themeStyles.borderColor}`,
+          backgroundColor: themeStyles.cardBg,
+          boxShadow:
+            "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
+        }}
+      >
+        {/* ✨ Table Box အတွင်းဘက်ထိပ်ဆုံး Panel Row (Top Order, Search, Export) */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "20px",
+            width: "100%",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "18px",
+              fontWeight: "700",
+              color: themeStyles.color,
+              margin: 0,
+            }}
+          >
+            Mobile Order
+          </h2>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            {/* Search Input */}
+            <div
+              style={{
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                border: `1px solid ${themeStyles.borderColor}`,
+                borderRadius: "8px",
+                padding: "6px 12px",
+                backgroundColor: themeStyles.inputBg,
+                width: "240px",
+              }}
+            >
+              <input
+                type="search"
+                placeholder="Search..."
+                onChange={changetext}
+                style={{
+                  border: "none",
+                  outline: "none",
+                  backgroundColor: "transparent",
+                  color: themeStyles.color,
+                  fontSize: "14px",
+                  width: "100%",
+                  paddingRight: "24px",
+                }}
+              />
+              <SearchIcon
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  color: "#94A3B8",
+                  fontSize: "20px",
+                }}
+              />
+            </div>
+
+            {/* Export Button */}
+            <button
+              onClick={ExportTable}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "8px 16px",
+                borderRadius: "8px",
+                border: "none",
+                backgroundColor: "#0F172A",
+                color: "#FFFFFF",
+                fontSize: "14px",
+                fontWeight: "600",
+                cursor: "pointer",
+                transition: "opacity 0.2s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            >
+              <SaveAltIcon style={{ fontSize: "18px" }} /> Export
+            </button>
+          </div>
+        </div>
+
+        {/* 📊 Table Content */}
+        <div style={{ overflowX: "auto" }}>
+          <table
+            style={{
+              width: "100%",
+              textAlign: "left",
+              borderCollapse: "collapse",
+            }}
+          >
+            <thead>
+              <tr
+                style={{
+                  borderBottom: `1px solid ${themeStyles.borderColor}`,
+                  color: "#94A3B8",
+                  fontSize: "12px",
+                  fontWeight: "600",
+                  textTransform: "uppercase",
+                  backgroundColor: isDarkMode ? "#1E293B" : "#F8FAFC",
+                }}
+              >
+                <th style={{ padding: "16px 12px" }}>ID</th>
+                <th style={{ padding: "16px 12px" }}>Customer</th>
+                <th style={{ padding: "16px 12px" }}>Amount</th>
+                <th style={{ padding: "16px 12px" }}>Date</th>
+                <th style={{ padding: "16px 12px" }}>Time</th>
+                <th style={{ padding: "16px 12px" }}>Payment</th>
+                <th style={{ padding: "16px 12px", textAlign: "center" }}>
+                  Proof
+                </th>
+                <th style={{ padding: "16px 12px", textAlign: "center" }}>
+                  Order Status
+                </th>
+                <th style={{ padding: "16px 12px", textAlign: "right" }}>
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody style={{ fontSize: "14px", color: themeStyles.color }}>
+              {Array.isArray(filterdata) ? (
+                filterdata.length > 0 ? (
+                  <>
+                    {filterdata
+                      .slice(startnumber, endnumber)
+                      .map((item, index) => {
+                        const status = item.order_status
+                          ? item.order_status.toLowerCase()
+                          : "";
+                        return (
+                          <tr
+                            key={index}
+                            style={{
+                              borderBottom: `1px solid ${themeStyles.borderColor}`,
+                              height: "69px",
+                            }}
+                          >
+                            <td
+                              style={{
+                                padding: "12px",
+                                fontWeight: "600",
+                                color: "#4F46E5",
+                              }}
+                            >
+                              #{item.order_id}
+                            </td>
+                            <td style={{ padding: "12px", fontWeight: "600" }}>
+                              {item.customer_name}
+                            </td>
+                            <td style={{ padding: "12px", fontWeight: "500" }}>
+                              {item.Total?.toLocaleString()} ks
+                            </td>
+                            <td style={{ padding: "12px", color: "#94A3B8" }}>
+                              {item.Date}
+                            </td>
+                            <td style={{ padding: "12px", color: "#94A3B8" }}>
+                              {item.Time}
+                            </td>
+                            <td style={{ padding: "12px" }}>
+                              <span
+                                style={{
+                                  fontSize: "12px",
+                                  backgroundColor: isDarkMode
+                                    ? "#334155"
+                                    : "#F1F5F9",
+                                  padding: "4px 8px",
+                                  borderRadius: "6px",
+                                }}
+                              >
+                                {item.payment_method}
+                              </span>
+                            </td>
+                            <td style={{ padding: "12px" }}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <img
+                                  src={item.payment_proof}
+                                  style={{
+                                    width: "40px",
+                                    height: "40px",
+                                    borderRadius: "8px",
+                                    objectFit: "cover",
+                                    cursor: "pointer",
+                                    border: `1px solid ${themeStyles.borderColor}`,
+                                  }}
+                                  onClick={() =>
+                                    showImagePreview(item.payment_proof)
+                                  }
+                                  alt="Proof"
+                                />
+                              </div>
+                            </td>
+                            <td style={{ padding: "12px" }}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                                className={`${status}action`}
+                                id="vss"
+                              >
+                                <select
+                                  onChange={(event) => UpdateOrder(item, event)}
+                                  value={item.order_status}
+                                  style={{
+                                    padding: "6px 15px",
+                                    borderRadius: "10px",
+                                    fontWeight: "600",
+                                    border: "none",
+                                    outline: "none",
+                                    cursor: "pointer",
+                                    fontSize: "13px",
+                                    backgroundColor:
+                                      item.order_status?.toLowerCase() ===
+                                      "completed"
+                                        ? isDarkMode
+                                          ? "#1B4332"
+                                          : "#E6F4EA"
+                                        : item.order_status?.toLowerCase() ===
+                                            "pending"
+                                          ? isDarkMode
+                                            ? "#5F430B"
+                                            : "#FEF3C7"
+                                          : isDarkMode
+                                            ? "#5C1D1D"
+                                            : "#FEE2E2",
+                                    color:
+                                      item.order_status?.toLowerCase() ===
+                                      "completed"
+                                        ? isDarkMode
+                                          ? "#A3E635"
+                                          : "#137333"
+                                        : item.order_status?.toLowerCase() ===
+                                            "pending"
+                                          ? isDarkMode
+                                            ? "#FBBF24"
+                                            : "#D97706"
+                                          : isDarkMode
+                                            ? "#FCA5A5"
+                                            : "#991B1B",
+                                  }}
+                                >
+                                  <option
+                                    value="pending"
+                                    style={{
+                                      backgroundColor: isDarkMode
+                                        ? "#1E293B"
+                                        : "#fff",
+                                      color: isDarkMode ? "#FBBF24" : "#D97706",
+                                    }}
+                                  >
+                                    Pending
+                                  </option>
+                                  <option
+                                    value="completed"
+                                    style={{
+                                      backgroundColor: isDarkMode
+                                        ? "#1E293B"
+                                        : "#fff",
+                                      color: isDarkMode ? "#A3E635" : "#137333",
+                                    }}
+                                  >
+                                    Completed
+                                  </option>
+                                  <option
+                                    value="cancel"
+                                    style={{
+                                      backgroundColor: isDarkMode
+                                        ? "#1E293B"
+                                        : "#fff",
+                                      color: isDarkMode ? "#FCA5A5" : "#991B1B",
+                                    }}
+                                  >
+                                    Cancel
+                                  </option>
+                                </select>
+                              </div>
+                            </td>
+                            <td
+                              style={{ padding: "12px", textAlign: "right" }}
+                              className="actioncolumn"
+                            >
+                              <p
+                                style={{
+                                  display: "inline-block",
+                                  margin: 0,
+                                  padding: "5px 12px",
+                                  backgroundColor: "#3B82F6",
+                                  color: "white",
+                                  borderRadius: "8px",
+                                  cursor: "pointer",
+                                  fontSize: "13px",
+                                }}
+                                onClick={() => show_order(item)}
+                              >
+                                View
+                              </p>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    {/* Empty Padding Rows */}
+                    {currentRowsCount < 5 &&
+                      [...Array(5 - currentRowsCount)].map((_, idx) => (
+                        <tr
+                          key={`empty-${idx}`}
+                          style={{
+                            borderBottom: `1px solid ${themeStyles.borderColor}`,
+                            height: "69px",
+                          }}
+                        >
+                          <td colSpan="9">&nbsp;</td>
+                        </tr>
+                      ))}
+                  </>
+                ) : (
+                  <tr style={{ height: "345px" }}>
+                    <td
+                      colSpan="9"
+                      style={{ textAlign: "center", color: "#94A3B8" }}
+                    >
+                      No data found
+                    </td>
+                  </tr>
+                )
+              ) : (
+                [...Array(5)].map((_, index) => (
+                  <tr key={index} style={{ height: "69px" }}>
+                    <td colSpan="9" style={{ padding: "12px 0" }}>
+                      <CustomerLoading times={9} />
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination Footer */}
+        {Array.isArray(filterdata) && filterdata.length > 5 && (
+          <div
+            style={{
+              marginTop: "16px",
+              paddingTop: "16px",
+              borderTop: `1px solid ${themeStyles.borderColor}`,
+            }}
+          >
+            {TableFooterJsx}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default MobileOrder;
